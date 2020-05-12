@@ -1,64 +1,17 @@
-import { ApolloServer, gql, IResolvers } from 'apollo-server';
+import { ApolloServer, gql } from 'apollo-server';
 import { DocumentNode } from 'graphql';
+import * as boardGames from './board-games';
+import * as books from './books';
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
-const typeDefs: DocumentNode = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    id: String
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-    book(id: String): Book
-  }
+const typeDef: DocumentNode = gql`
+  type Query
 `;
 
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-}
+const server = new ApolloServer({
+  typeDefs: [typeDef, books.typeDefs, boardGames.typeDefs],
+  resolvers: [books.resolvers, boardGames.resolvers],
+});
 
-const books = [
-  {
-    id: '1',
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: 'J.K. Rowling',
-  },
-  {
-    id: '2',
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
-
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
-const resolvers: IResolvers = {
-  Query: {
-    books: (): Book[] => books,
-    book: (_: any, { id }: { id: string }): Book | undefined => {
-      console.log(id);
-      return books.find((b) => b.id === id);
-    },
-  },
-};
-
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({ typeDefs, resolvers: resolvers });
-
-// The `listen` method launches a web server.
 server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
