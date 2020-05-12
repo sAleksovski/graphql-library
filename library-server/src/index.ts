@@ -47,7 +47,7 @@ const books = [
 const resolvers: IResolvers = {
   Query: {
     books: (): Book[] => books,
-    book: (_: any, { id }: { id: string }): Book => {
+    book: (_: any, { id }: { id: string }): Book | undefined => {
       console.log(id);
       return books.find((b) => b.id === id);
     },
