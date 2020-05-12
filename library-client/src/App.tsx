@@ -1,19 +1,54 @@
-import React from 'react';
-import './App.css';
-import logo from './logo.svg';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+import React, { useState } from 'react';
+
+const GET_BOOKS = gql`
+  query Books {
+    books {
+      id
+      title
+      author
+    }
+  }
+`;
+
+const GET_BOOK_DETAILS = gql`
+  query Book($bookId: String!) {
+    book(id: $bookId) {
+      id
+      author
+    }
+  }
+`;
+
+function BookDetails({ bookId }: any) {
+  const { loading, error, data } = useQuery(GET_BOOK_DETAILS, {
+    variables: { bookId },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <div>{`Error! ${error}`}</div>;
+
+  return <div>{data.book.author}</div>;
+}
 
 function App() {
+  const [selectedBook, setSelectedBook] = useState(null);
+  const { loading, error, data } = useQuery(GET_BOOKS);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
+    <div style={{ display: 'flex' }}>
+      <ul>
+        {data.books.map(({ id, title }: any) => (
+          <li key={id} onClick={() => setSelectedBook(id)}>
+            {title}
+          </li>
+        ))}
+      </ul>
+      {selectedBook && <BookDetails bookId={selectedBook} />}
     </div>
   );
 }
