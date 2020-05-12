@@ -1,0 +1,10 @@
+{
+  "name": "graphql-library",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "format": "cd library-client && npm run format && cd ../library-server && npm run format",
+    "lint": "cd library-client && npm run lint && cd ../library-server && npm run lint"
+  },
+  "author": "Stefan Aleksovski"
+}

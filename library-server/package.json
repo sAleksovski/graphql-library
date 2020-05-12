@@ -16,7 +16,9 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.13.1",
-    "graphql": "^15.0.0"
+    "graphql": "^15.0.0",
+    "pg": "^8.1.0",
+    "typeorm": "^0.2.24"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.32.0",

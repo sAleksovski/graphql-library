@@ -2,14 +2,14 @@ import { gql } from 'apollo-server';
 import { DocumentNode } from 'graphql';
 
 export const typeDefs: DocumentNode = gql`
-  type Book {
-    id: ID!
+  type BoardGame {
+    id: Int!
     title: String
-    author: String
+    boardGameGeekUrl: String
   }
 
   extend type Query {
-    books: [Book]
-    book(id: String!): Book
+    boardGames: [BoardGame]
+    boardGame(id: Int!): BoardGame
   }
 `;

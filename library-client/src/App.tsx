@@ -7,13 +7,12 @@ const GET_BOOKS = gql`
     books {
       id
       title
-      author
     }
   }
 `;
 
 const GET_BOOK_DETAILS = gql`
-  query Book($bookId: String!) {
+  query Book($bookId: Int!) {
     book(id: $bookId) {
       id
       author

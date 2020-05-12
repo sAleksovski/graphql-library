@@ -5,6 +5,6 @@ import { BoardGame } from './board-game.types';
 export const resolvers: IResolvers = {
   Query: {
     boardGames: (): BoardGame[] => boardGames,
-    boardGame: (_: any, { id }: { id: string }): BoardGame | undefined => boardGames.find((b) => b.id === id),
+    boardGame: (_: any, { id }: { id: number }): BoardGame | undefined => boardGames.find((b) => b.id === id),
   },
 };

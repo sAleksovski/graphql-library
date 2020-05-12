@@ -1,5 +1,5 @@
 export interface BoardGame {
-  id: string;
+  id: number;
   title: string;
   boardGameGeekUrl: string;
 }
