@@ -7,7 +7,15 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000',
+  uri: 'http://localhost:4000/graphql',
+  request: (operation) => {
+    const token = localStorage.getItem('jwtToken');
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    });
+  },
 });
 
 ReactDOM.render(

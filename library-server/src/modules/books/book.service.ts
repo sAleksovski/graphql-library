@@ -5,7 +5,7 @@ import { BookRepository } from './book.repository';
 import { resolveBookDetails, ResolvedBookData } from './books-data-resolver';
 
 class BookService {
-  private get bookRepository() {
+  private get bookRepository(): BookRepository {
     return getCustomRepository(BookRepository);
   }
 
