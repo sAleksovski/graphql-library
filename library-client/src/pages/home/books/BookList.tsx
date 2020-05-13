@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React, { useState } from 'react';
+import { BookDetails } from './BookDetails';
 
 const GET_BOOKS = gql`
   query Books {
@@ -11,27 +12,7 @@ const GET_BOOKS = gql`
   }
 `;
 
-const GET_BOOK_DETAILS = gql`
-  query Book($bookId: Int!) {
-    book(id: $bookId) {
-      id
-      author
-    }
-  }
-`;
-
-function BookDetails({ bookId }: any) {
-  const { loading, error, data } = useQuery(GET_BOOK_DETAILS, {
-    variables: { bookId },
-  });
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <div>{`Error! ${error}`}</div>;
-
-  return <div>{data.book.author}</div>;
-}
-
-function App() {
+export function BookList() {
   const [selectedBook, setSelectedBook] = useState(null);
   const { loading, error, data } = useQuery(GET_BOOKS);
 
@@ -51,5 +32,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
