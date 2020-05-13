@@ -24,6 +24,7 @@
       "*": ["./*"]
     },
     "types": ["node"],
+    "typeRoots": ["./node_modules/@types", "./src/typings"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,

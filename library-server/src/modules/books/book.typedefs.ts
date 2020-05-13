@@ -8,8 +8,18 @@ export const typeDefs: DocumentNode = gql`
     author: String
   }
 
+  input CreateBookInput {
+    title: String
+    author: String
+  }
+
   extend type Query {
     books: [Book]
     book(id: Int!): Book
+  }
+
+  extend type Mutation {
+    createBook(book: CreateBookInput!): Book
+    createBookByIsbn(isbn: String!): Book
   }
 `;

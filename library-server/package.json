@@ -17,6 +17,7 @@
   "dependencies": {
     "apollo-server": "^2.13.1",
     "graphql": "^15.0.0",
+    "node-isbn": "^1.5.1",
     "pg": "^8.1.0",
     "typeorm": "^0.2.24"
   },
