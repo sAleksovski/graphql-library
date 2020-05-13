@@ -1,7 +1,7 @@
 import { IResolvers } from 'apollo-server';
 import { Book } from './book.entity';
 import { CreateBookByIsbnInput, CreateBookInput, IdInput } from './book.inputs';
-import * as bookService from './book.service';
+import { bookService } from './book.service';
 
 export const resolvers: IResolvers = {
   Query: {
