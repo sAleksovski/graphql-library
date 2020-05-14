@@ -1,5 +1,4 @@
 import { ApolloServer } from 'apollo-server-express';
-import { AuthenticatedUser } from 'authentication/auth.types';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
@@ -24,7 +23,7 @@ database.createDatabaseConnection().then(() => {
   const server = new ApolloServer({
     typeDefs: [common.typeDef, books.typeDefs, boardGames.typeDefs],
     resolvers: [books.resolvers, boardGames.resolvers],
-    context: ({ req }): AuthenticatedUser => auth.authenticateUser(req),
+    context: ({ req }): auth.AuthenticatedUser => auth.authenticateUser(req),
   });
   server.applyMiddleware({ app });
 

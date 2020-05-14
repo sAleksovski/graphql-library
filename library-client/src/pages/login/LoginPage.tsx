@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { auth } from '../../app/auth-helpers';
+import { auth } from 'app/auth-helpers';
 
 export function LoginPage() {
   const history = useHistory();
