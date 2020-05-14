@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
 import React from 'react';
 import { auth } from './auth-helpers';
+import NormalizeStyles from './NormalizeStyles';
 import Routes from './Routes';
 
 const client = new ApolloClient({
@@ -19,6 +20,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
+      <NormalizeStyles />
       <Routes />
     </ApolloProvider>
   );
