@@ -25,6 +25,7 @@ export const typeDefs: DocumentNode = gql`
     thumbnail: String
     language: String
     infoLink: String
+    comments: [Comment]
   }
 
   input CreateBookInput {

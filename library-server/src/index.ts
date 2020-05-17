@@ -3,10 +3,10 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import * as auth from './authentication';
-import * as common from './common';
 import * as database from './database';
 import * as boardGames from './modules/board-games';
 import * as books from './modules/books';
+import * as common from './modules/common';
 
 database.createDatabaseConnection().then(() => {
   console.log(` 🖥️ DB connected`);

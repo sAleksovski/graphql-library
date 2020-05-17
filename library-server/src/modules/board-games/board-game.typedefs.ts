@@ -6,6 +6,7 @@ export const typeDefs: DocumentNode = gql`
     id: Int!
     title: String
     boardGameGeekUrl: String
+    comments: [Comment]
   }
 
   extend type Query {

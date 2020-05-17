@@ -1,9 +1,9 @@
 import { getCustomRepository } from 'typeorm';
 import { CreateBookByIsbnInput, CreateBookInput, IdInput } from './book.inputs';
 import { resolveBookDetails, ResolvedBookData } from './books-data-resolver';
+import { CategoryRepository } from './database/book-category.repository';
 import { Book } from './database/book.entity';
 import { BookRepository } from './database/book.repository';
-import { CategoryRepository } from './database/category.repository';
 
 class BookService {
   private get bookRepository(): BookRepository {

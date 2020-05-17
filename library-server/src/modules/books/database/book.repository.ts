@@ -1,8 +1,8 @@
 import { ApolloError } from 'apollo-server';
 import { EntityRepository, Repository } from 'typeorm';
-import { Book } from './book.entity';
 import { ResolvedBookData } from '../books-data-resolver';
-import { Category } from './category.entity';
+import { BookCategory } from './book-category.entity';
+import { Book } from './book.entity';
 
 @EntityRepository(Book)
 export class BookRepository extends Repository<Book> {
@@ -14,7 +14,7 @@ export class BookRepository extends Repository<Book> {
     return book;
   }
 
-  async createBook(resolvedBookData: ResolvedBookData, categories: Category[]): Promise<Book> {
+  async createBook(resolvedBookData: ResolvedBookData, categories: BookCategory[]): Promise<Book> {
     const book = new Book();
 
     book.title = resolvedBookData.title;

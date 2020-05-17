@@ -1,5 +1,15 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Category } from './category.entity';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { CommentThread } from '../../common/database/comment-thread.entity';
+import { BookCategory } from './book-category.entity';
 
 @Entity()
 export class Book extends BaseEntity {
@@ -32,7 +42,7 @@ export class Book extends BaseEntity {
   isbn10?: string;
 
   @Column({
-    type: 'float',
+    type: 'int',
     default: 0,
   })
   pageCount: number;
@@ -42,9 +52,16 @@ export class Book extends BaseEntity {
   })
   printType: string;
 
-  @ManyToMany(() => Category, (category) => category.books)
+  @ManyToMany(() => BookCategory, (category) => category.books)
   @JoinTable()
-  categories: Promise<Category[]>;
+  categories: Promise<BookCategory[]>;
+
+  @OneToOne(() => CommentThread, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  commentThread: CommentThread = new CommentThread();
 
   @Column({
     type: 'float',
