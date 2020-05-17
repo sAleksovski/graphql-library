@@ -1,12 +1,11 @@
+import { ResolvedBookData } from './books-data-resolver';
+
 export interface IdInput {
   id: number;
 }
 
 export interface CreateBookInput {
-  book: {
-    title: string;
-    author: string;
-  };
+  book: ResolvedBookData;
 }
 
 export interface CreateBookByIsbnInput {

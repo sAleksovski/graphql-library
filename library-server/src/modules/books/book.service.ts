@@ -1,12 +1,17 @@
 import { getCustomRepository } from 'typeorm';
-import { Book } from './book.entity';
 import { CreateBookByIsbnInput, CreateBookInput, IdInput } from './book.inputs';
-import { BookRepository } from './book.repository';
 import { resolveBookDetails, ResolvedBookData } from './books-data-resolver';
+import { Book } from './database/book.entity';
+import { BookRepository } from './database/book.repository';
+import { CategoryRepository } from './database/category.repository';
 
 class BookService {
   private get bookRepository(): BookRepository {
     return getCustomRepository(BookRepository);
+  }
+
+  private get categoryRepository(): CategoryRepository {
+    return getCustomRepository(CategoryRepository);
   }
 
   async getBooks(): Promise<Book[]> {
@@ -17,12 +22,18 @@ class BookService {
     return this.bookRepository.findById(id);
   }
 
-  async createBook({ book: { title, author } }: CreateBookInput): Promise<Book> {
-    return this.bookRepository.createBook(title, author);
+  async createBook({ book }: CreateBookInput): Promise<Book> {
+    return this.saveBook(book);
   }
+
   async createBookByIsbn({ isbn }: CreateBookByIsbnInput): Promise<Book> {
-    const { title, author }: ResolvedBookData = await resolveBookDetails(isbn);
-    return this.bookRepository.createBook(title, author);
+    const resolveBookData: ResolvedBookData = await resolveBookDetails(isbn);
+    return this.saveBook(resolveBookData);
+  }
+
+  private async saveBook(bookData: ResolvedBookData): Promise<Book> {
+    const categories = await this.categoryRepository.findOrCreateByName(bookData.categories);
+    return this.bookRepository.createBook(bookData, categories);
   }
 }
 

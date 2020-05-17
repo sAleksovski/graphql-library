@@ -1,7 +1,8 @@
 import { IResolvers } from 'apollo-server';
-import { Book } from './book.entity';
 import { CreateBookByIsbnInput, CreateBookInput, IdInput } from './book.inputs';
 import { bookService } from './book.service';
+import { Book } from './database/book.entity';
+import { Category } from './database/category.entity';
 
 export const resolvers: IResolvers = {
   Query: {
@@ -12,5 +13,8 @@ export const resolvers: IResolvers = {
     createBook: (_: any, createBookInput: CreateBookInput): Promise<Book> => bookService.createBook(createBookInput),
     createBookByIsbn: (_: any, createBookByIsbnInput: CreateBookByIsbnInput): Promise<Book> =>
       bookService.createBookByIsbn(createBookByIsbnInput),
+  },
+  Book: {
+    categories: (book: Book): Promise<Category[]> => book.categories,
   },
 };

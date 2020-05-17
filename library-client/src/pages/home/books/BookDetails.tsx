@@ -1,12 +1,14 @@
-import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import React from 'react';
 
 const GET_BOOK_DETAILS = gql`
   query Book($bookId: Int!) {
     book(id: $bookId) {
       id
       author
+      title
+      thumbnail
     }
   }
 `;
@@ -19,5 +21,10 @@ export function BookDetails({ bookId }: any) {
   if (loading) return <p>Loading...</p>;
   if (error) return <div>{`Error! ${error}`}</div>;
 
-  return <div>{data.book.author}</div>;
+  return (
+    <div>
+      <div>Author: {data.book.author}</div>
+      <img src={data.book.thumbnail} alt={`Cover for ${data.book.title}`} />
+    </div>
+  );
 }

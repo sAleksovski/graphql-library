@@ -20,7 +20,6 @@ declare interface GoogleBookInfo {
   categories: string[];
   averageRating: number;
   ratingsCount: number;
-  maturityRating: string;
   imageLinks: GoogleBookImageLinks;
   language: string;
   previewLink: string;
