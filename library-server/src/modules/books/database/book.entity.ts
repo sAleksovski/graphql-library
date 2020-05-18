@@ -1,18 +1,9 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { CommentThread } from '../../common/database/comment-thread.entity';
+import { ChildEntity, Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { LoanableItem } from '../../common';
 import { BookCategory } from './book-category.entity';
 
-@Entity()
-export class Book extends BaseEntity {
+@ChildEntity('BOOK')
+export class Book extends LoanableItem {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -55,13 +46,6 @@ export class Book extends BaseEntity {
   @ManyToMany(() => BookCategory, (category) => category.books)
   @JoinTable()
   categories: Promise<BookCategory[]>;
-
-  @OneToOne(() => CommentThread, {
-    cascade: true,
-    eager: true,
-  })
-  @JoinColumn()
-  commentThread: CommentThread = new CommentThread();
 
   @Column({
     type: 'float',

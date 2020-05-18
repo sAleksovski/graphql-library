@@ -1,8 +1,8 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { CommentThread } from '../common/database/comment-thread.entity';
+import { ChildEntity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { LoanableItem } from '../common';
 
-@Entity()
-export class BoardGame extends BaseEntity {
+@ChildEntity('BOARD_GAME')
+export class BoardGame extends LoanableItem {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,11 +11,4 @@ export class BoardGame extends BaseEntity {
 
   @Column()
   boardGameGeekUrl: string;
-
-  @OneToOne(() => CommentThread, {
-    cascade: true,
-    eager: true,
-  })
-  @JoinColumn()
-  commentThread: CommentThread = new CommentThread();
 }

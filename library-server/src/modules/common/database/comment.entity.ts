@@ -1,13 +1,13 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { CommentThread } from './comment-thread.entity';
+import { LoanableItem } from './loanable-item.entity';
 
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => CommentThread, (commentThread) => commentThread.comments)
-  thread: CommentThread;
+  @ManyToOne(() => LoanableItem, (loanableItem) => loanableItem.comments)
+  item: LoanableItem;
 
   @Column()
   comment: string;

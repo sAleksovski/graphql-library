@@ -1,5 +1,5 @@
 import { IResolvers } from 'apollo-server';
-import { Comment } from '../common/database/comment.entity';
+import { Comment } from '../common';
 import { CreateBookByIsbnInput, CreateBookInput, IdInput } from './book.inputs';
 import { bookService } from './book.service';
 import { BookCategory } from './database/book-category.entity';
@@ -17,6 +17,6 @@ export const resolvers: IResolvers = {
   },
   Book: {
     categories: (book: Book): Promise<BookCategory[]> => book.categories,
-    comments: (book: Book): Promise<Comment[]> => book.commentThread.comments,
+    comments: (book: Book): Promise<Comment[]> => book.comments,
   },
 };
