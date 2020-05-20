@@ -1,8 +1,8 @@
 import { auth } from 'app/auth-helpers';
-import { Button } from 'components/Button';
-import { Column, Columns } from 'components/Grid';
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { Button } from 'shared/components/Button';
+import { Column, Columns } from 'shared/components/Grid';
 import reading from './reading.jpg';
 import {
   Card,
@@ -16,7 +16,7 @@ import {
   Label,
   LoginError,
   LoginText,
-} from './styles';
+} from './styled';
 
 export function LoginPage() {
   const history = useHistory();

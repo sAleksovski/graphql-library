@@ -8,6 +8,9 @@ const GET_BOOKS = gql`
     books {
       id
       title
+      author
+      averageRating
+      thumbnail
     }
   }
 `;
@@ -22,9 +25,11 @@ export function BookList() {
   return (
     <div style={{ display: 'flex' }}>
       <ul>
-        {data.books.map(({ id, title }: any) => (
+        {data.books.map(({ id, title, author, averageRating }: any) => (
           <li key={id} onClick={() => setSelectedBook(id)}>
-            {title}
+            <div>{title}</div>
+            <small>{author}</small>
+            <small>{averageRating}</small>
           </li>
         ))}
       </ul>
