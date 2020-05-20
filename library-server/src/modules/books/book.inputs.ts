@@ -11,3 +11,7 @@ export interface CreateBookInput {
 export interface CreateBookByIsbnInput {
   isbn: string;
 }
+
+export interface CreateBooksByIsbnsInput {
+  isbnList: string[];
+}

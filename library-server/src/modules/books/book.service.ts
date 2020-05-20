@@ -1,5 +1,5 @@
 import { getCustomRepository } from 'typeorm';
-import { CreateBookByIsbnInput, CreateBookInput, IdInput } from './book.inputs';
+import { CreateBookByIsbnInput, CreateBookInput, CreateBooksByIsbnsInput, IdInput } from './book.inputs';
 import { resolveBookDetails, ResolvedBookData } from './books-data-resolver';
 import { CategoryRepository } from './database/book-category.repository';
 import { Book } from './database/book.entity';
@@ -29,6 +29,10 @@ class BookService {
   async createBookByIsbn({ isbn }: CreateBookByIsbnInput): Promise<Book> {
     const resolveBookData: ResolvedBookData = await resolveBookDetails(isbn);
     return this.saveBook(resolveBookData);
+  }
+
+  createBooksByIsbns(createBooksByIsbnsInput: CreateBooksByIsbnsInput): Promise<Book[]> {
+    return Promise.all(createBooksByIsbnsInput.isbnList.map((isbn: string) => this.createBookByIsbn({ isbn })));
   }
 
   private async saveBook(bookData: ResolvedBookData): Promise<Book> {

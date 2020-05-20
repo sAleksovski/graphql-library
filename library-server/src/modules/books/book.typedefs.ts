@@ -55,5 +55,6 @@ export const typeDefs: DocumentNode = gql`
   extend type Mutation {
     createBook(book: CreateBookInput!): Book
     createBookByIsbn(isbn: String!): Book
+    createBooksByIsbns(isbnList: [String]!): [Book]
   }
 `;
