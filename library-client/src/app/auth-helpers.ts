@@ -2,7 +2,7 @@ export const auth = {
   getToken: () => localStorage.getItem('authToken'),
   isAuthenticated: () => !!localStorage.getItem('authToken'),
   login: (body: any): Promise<any> =>
-    fetch('http://localhost:4000/auth/login', {
+    fetch('/api/auth/login', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',

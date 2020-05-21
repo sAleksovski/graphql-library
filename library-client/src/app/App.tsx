@@ -8,7 +8,7 @@ import NormalizeStyles from './NormalizeStyles';
 import Routes from './Routes';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri: '/api/graphql',
   request: (operation) => {
     const token = auth.getToken();
     operation.setContext({

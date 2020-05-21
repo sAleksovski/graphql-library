@@ -1,6 +1,5 @@
 import { ApolloServer } from 'apollo-server-express';
 import bodyParser from 'body-parser';
-import cors from 'cors';
 import express from 'express';
 import * as auth from './authentication';
 import * as database from './database';
@@ -14,11 +13,6 @@ database.createDatabaseConnection().then(() => {
   const app = express();
 
   app.use(bodyParser.json());
-  app.use(
-    cors({
-      origin: 'http://localhost:3000',
-    }),
-  );
   app.use('/auth', auth.routes);
 
   const server = new ApolloServer({
