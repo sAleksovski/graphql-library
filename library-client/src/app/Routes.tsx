@@ -1,4 +1,5 @@
 import { createBrowserHistory } from 'history';
+import { Header } from 'pages/common/Header';
 import { HomePage } from 'pages/Home';
 import { LoginPage } from 'pages/Login';
 import React from 'react';
@@ -14,6 +15,7 @@ const Routes = () => (
         <LoginPage />
       </Route>
       <PrivateRoute path="/">
+        <Header />
         <HomePage />
       </PrivateRoute>
       <Route>Error</Route>
