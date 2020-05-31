@@ -5,6 +5,4 @@ export const HeaderWrapper = styled.div`
   justify-content: flex-end;
   align-items: center;
   padding: 1rem;
-  position: sticky;
-  top: 0;
 `;
