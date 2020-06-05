@@ -1,18 +1,31 @@
 import { Request, Response, Router } from 'express';
+import { userService } from '../modules/user';
 import { signToken } from './jwt';
-import { localUsers } from './local-users';
 
 const routes = Router();
 
-routes.post('/login', (req: Request, res: Response) => {
+routes.post('/login', async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
-  if (localUsers[username] === password) {
-    const accessToken = signToken({ sub: username });
+  try {
+    const sub = await userService.login({ username, password });
+    const accessToken = signToken({ sub });
     res.status(200).send({ accessToken });
+  } catch (error) {
+    res.status(401).send({ error });
   }
+});
 
-  res.status(401).send();
+routes.post('/register', async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+
+  try {
+    const sub = await userService.register({ username, password });
+    const accessToken = signToken({ sub });
+    res.status(200).send({ accessToken });
+  } catch (error) {
+    res.status(401).send({ error });
+  }
 });
 
 export { routes };

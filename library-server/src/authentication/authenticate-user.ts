@@ -1,6 +1,6 @@
 import { AuthenticationError } from 'apollo-server';
 import { Request } from 'express';
-import { AuthenticatedUser } from './auth.types';
+import { AuthenticatedUserContext } from 'modules/common';
 import { verifyToken } from './jwt';
 
 const getAuthTokenFromRequest = (req: Request): string | null => {
@@ -9,16 +9,16 @@ const getAuthTokenFromRequest = (req: Request): string | null => {
   return bearer === 'Bearer' && token ? token : null;
 };
 
-export const authenticateUser = (req: Request): AuthenticatedUser => {
+export const authenticateUser = (req: Request): AuthenticatedUserContext => {
   // Get the user token from the headers.
   const token = getAuthTokenFromRequest(req);
 
   if (!token) {
     throw new AuthenticationError('Authentication token not found.');
   }
-  const username = verifyToken(token).sub;
-  if (!username) {
+  const userId = verifyToken(token).sub;
+  if (!userId) {
     throw new AuthenticationError('Authentication token is invalid.');
   }
-  return { username };
+  return { userId: parseInt(userId) };
 };

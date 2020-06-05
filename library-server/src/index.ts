@@ -18,7 +18,7 @@ database.createDatabaseConnection().then(() => {
   const server = new ApolloServer({
     typeDefs: [common.typeDef, user.typeDefs, books.typeDefs, boardGames.typeDefs],
     resolvers: [user.resolvers, books.resolvers, boardGames.resolvers],
-    context: ({ req }): auth.AuthenticatedUser => auth.authenticateUser(req),
+    context: ({ req }): common.AuthenticatedUserContext => auth.authenticateUser(req),
   });
   server.applyMiddleware({ app });
 

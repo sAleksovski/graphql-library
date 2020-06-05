@@ -1,17 +1,10 @@
 import { IResolvers } from 'apollo-server';
-
-interface User {
-  id: number;
-  name: string;
-  avatarUrl: string;
-}
+import { AuthenticatedUserContext } from 'modules/common';
+import { userService } from './user.service';
+import { UserInfo } from './user.types';
 
 export const resolvers: IResolvers = {
   Query: {
-    userInfo: (): User => ({
-      id: 1,
-      name: 'Stefan Aleksovski',
-      avatarUrl: 'https://avatars0.githubusercontent.com/u/7473800',
-    }),
+    userInfo: (_, __, ctx: AuthenticatedUserContext): Promise<UserInfo> => userService.getUserInfo(ctx.userId),
   },
 };
