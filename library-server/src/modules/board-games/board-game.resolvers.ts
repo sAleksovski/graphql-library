@@ -7,7 +7,7 @@ import { BoardGame as BoardGameType } from './board-game.types';
 export const resolvers: IResolvers = {
   Query: {
     boardGames: (): BoardGameType[] => boardGames,
-    boardGame: (_: any, { id }: { id: number }): BoardGameType | undefined => boardGames.find((b) => b.id === id),
+    boardGame: (_, { id }: { id: number }): BoardGameType | undefined => boardGames.find((b) => b.id === id),
   },
   Book: {
     comments: (boardGame: BoardGame): Promise<Comment[]> => boardGame.comments,

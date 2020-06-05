@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../../modules/user';
 import { LoanableItem } from './loanable-item.entity';
 
 @Entity()
-export class Comment {
+export class Comment extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -10,5 +11,11 @@ export class Comment {
   item: LoanableItem;
 
   @Column()
-  comment: string;
+  content: string;
+
+  @ManyToOne(() => User)
+  user: Promise<User>;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
