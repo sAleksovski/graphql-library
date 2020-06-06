@@ -25,6 +25,11 @@ export const color = {
   borderInputFocus: '#4c9aff',
 };
 
+export const weight = {
+  bold: 600,
+  bolder: 700,
+};
+
 export const mixin = {
   boxShadowMedium: css`
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);

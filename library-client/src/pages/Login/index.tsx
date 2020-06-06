@@ -2,6 +2,7 @@ import { auth } from 'app/auth-helpers';
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Button } from 'shared/components/Button';
+import { Input } from 'shared/components/Form';
 import { Column, Columns } from 'shared/components/Grid';
 import reading from './reading.jpg';
 import {
@@ -12,7 +13,6 @@ import {
   Footer,
   FormContainer,
   Image,
-  Input,
   Label,
   LoginError,
   LoginText,

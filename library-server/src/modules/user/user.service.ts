@@ -46,7 +46,7 @@ class UserService {
       return {
         id: user.id,
         name: user.name || user.username,
-        avatarUrl: user.avatarUrl || 'https://cdn4.iconfinder.com/data/icons/linecon/512/photo-512.png',
+        avatarUrl: user.avatarUrl,
       };
     }
 

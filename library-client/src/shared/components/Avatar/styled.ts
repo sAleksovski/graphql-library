@@ -7,7 +7,6 @@ interface ImageProps {
 }
 
 export const Image = styled.div<ImageProps>`
-  display: inline-block;
   width: ${IMAGE_SIZE}px;
   height: ${IMAGE_SIZE}px;
   border-radius: 100%;
@@ -23,7 +22,6 @@ interface LetterProps {
 }
 
 export const Letter = styled.div<LetterProps>`
-  display: inline-block;
   width: ${IMAGE_SIZE}px;
   height: ${IMAGE_SIZE}px;
   border-radius: 100%;

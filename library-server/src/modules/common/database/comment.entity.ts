@@ -2,7 +2,11 @@ import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGenerat
 import { User } from '../../../modules/user';
 import { LoanableItem } from './loanable-item.entity';
 
-@Entity()
+@Entity({
+  orderBy: {
+    createdAt: 'ASC',
+  },
+})
 export class Comment extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

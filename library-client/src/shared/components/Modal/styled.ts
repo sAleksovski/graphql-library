@@ -33,6 +33,7 @@ export const StyledModal = styled.div<StyledModalProps>`
   max-width: ${(props) => props.width}px;
   vertical-align: middle;
   border-radius: 1rem;
+  margin-top: 2rem;
   ${mixin.boxShadowMedium}
 `;
 

@@ -1,8 +1,27 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { Avatar } from 'shared/components/Avatar';
 import { Rating } from 'shared/components/Rating';
-import { Author, BookDetailsWrapper, Description, Image, Left, LeftContent, Right, Title } from './styled';
+import { dateTimeFormatter } from 'shared/utils/date-time.formatter';
+import { BookAddComment } from './BookAddComment';
+import {
+  Author,
+  BookDetailsWrapper,
+  Comment,
+  CommentContent,
+  CommentDate,
+  CommentLeft,
+  CommentMain,
+  CommentSection,
+  CommentUser,
+  Description,
+  Image,
+  Left,
+  LeftContent,
+  Right,
+  Title,
+} from './styled';
 
 const GET_BOOK_DETAILS = gql`
   query Book($bookId: Int!) {
@@ -13,6 +32,15 @@ const GET_BOOK_DETAILS = gql`
       thumbnail
       description
       averageRating
+      comments {
+        id
+        content
+        createdAt
+        user {
+          name
+          avatarUrl
+        }
+      }
     }
   }
 `;
@@ -37,6 +65,30 @@ export function BookDetails({ bookId }: any) {
         <Title>{data.book.title}</Title>
         <Author>{data.book.author}</Author>
         <Description>{data.book.description}</Description>
+
+        <CommentSection>
+          {data.book.comments.map((comment: any, index: number) => (
+            <Comment key={comment.id}>
+              <CommentLeft>
+                <Avatar avatarUrl={comment.user.avatarUrl} name={comment.user.name}></Avatar>
+              </CommentLeft>
+              <CommentMain>
+                <CommentUser>{comment.user.name}</CommentUser>
+                <CommentContent>{comment.content}</CommentContent>
+                <CommentDate>{dateTimeFormatter.format(new Date(comment.createdAt))}</CommentDate>
+              </CommentMain>
+            </Comment>
+          ))}
+
+          <BookAddComment
+            itemId={bookId}
+            propertyKey="book"
+            queryWithVariables={{
+              query: GET_BOOK_DETAILS,
+              variables: { bookId },
+            }}
+          />
+        </CommentSection>
       </Right>
     </BookDetailsWrapper>
   );
