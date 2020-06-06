@@ -1,5 +1,5 @@
 import { IResolvers } from 'apollo-server';
-import { Comment } from '../common';
+import { Comment } from 'modules/common';
 import { boardGames } from './board-game.data';
 import { BoardGame } from './board-game.entity';
 import { BoardGame as BoardGameType } from './board-game.types';

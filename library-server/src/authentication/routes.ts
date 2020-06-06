@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { userService } from '../modules/user';
+import { userService } from 'modules/user';
 import { signToken } from './jwt';
 
 const routes = Router();

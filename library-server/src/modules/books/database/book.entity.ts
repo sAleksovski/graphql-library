@@ -1,5 +1,5 @@
 import { ChildEntity, Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { LoanableItem } from '../../common';
+import { LoanableItem } from 'modules/common';
 import { BookCategory } from './book-category.entity';
 
 @ChildEntity('BOOK')

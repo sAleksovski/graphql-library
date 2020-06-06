@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server';
-import { User } from '../../modules/user';
+import { User } from 'modules/user';
 import { CreateCommentInput } from './common.inputs';
 import { Comment, LoanableItem } from './database';
 

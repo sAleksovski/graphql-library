@@ -1,5 +1,5 @@
 import { ChildEntity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { LoanableItem } from '../common';
+import { LoanableItem } from 'modules/common';
 
 @ChildEntity('BOARD_GAME')
 export class BoardGame extends LoanableItem {

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec ts-node --files src/index.ts",
+    "start:production": "node -r ./tsconfig-paths.js build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd src && tsc",
     "format:check": "prettier --list-different \"src/**/*.{ts,tsx}\"",
@@ -20,6 +21,7 @@
     "bcrypt": "^4.0.1",
     "graphql": "^15.0.0",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "node-isbn": "^1.5.1",
     "pg": "^8.1.0",
     "typeorm": "^0.2.24"
@@ -34,6 +36,10 @@
     "nodemon": "^2.0.3",
     "prettier": "^2.0.5",
     "ts-node": "^8.10.1",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.8.3"
-  }
+  },
+  "_moduleDirectories": [
+    "src"
+  ]
 }

@@ -1,5 +1,5 @@
+import { User } from 'modules/user';
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../../../modules/user';
 import { LoanableItem } from './loanable-item.entity';
 
 @Entity({

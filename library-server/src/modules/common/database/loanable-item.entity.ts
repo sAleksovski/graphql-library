@@ -1,5 +1,5 @@
+import { LoanEvent } from 'modules/loans/loan-event.entity';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
-import { LoanEvent } from '../../loans/loan-event.entity';
 import { Comment } from './comment.entity';
 
 @Entity()
