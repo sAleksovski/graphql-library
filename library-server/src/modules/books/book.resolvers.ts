@@ -1,4 +1,5 @@
 import { IResolvers } from 'apollo-server';
+import { LoanInfo, loanService } from 'modules/loans';
 import { CreateBookByIsbnInput, CreateBookInput, CreateBooksByIsbnsInput, IdInput } from './book.inputs';
 import { bookService } from './book.service';
 import { Book } from './database/book.entity';
@@ -14,5 +15,8 @@ export const resolvers: IResolvers = {
       bookService.createBookByIsbn(createBookByIsbnInput),
     createBooksByIsbns: (_, createBooksByIsbnsInput: CreateBooksByIsbnsInput): Promise<Book[]> =>
       bookService.createBooksByIsbns(createBooksByIsbnsInput),
+  },
+  Book: {
+    loanInfo: (book: Book): Promise<LoanInfo> => loanService.getLoanInfo(book.id),
   },
 };

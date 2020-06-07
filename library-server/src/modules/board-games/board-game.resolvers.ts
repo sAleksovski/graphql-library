@@ -1,5 +1,5 @@
 import { IResolvers } from 'apollo-server';
-import { Comment } from 'modules/common';
+import { LoanInfo, loanService } from 'modules/loans';
 import { boardGames } from './board-game.data';
 import { BoardGame } from './board-game.entity';
 import { BoardGame as BoardGameType } from './board-game.types';
@@ -9,7 +9,7 @@ export const resolvers: IResolvers = {
     boardGames: (): BoardGameType[] => boardGames,
     boardGame: (_, { id }: { id: number }): BoardGameType | undefined => boardGames.find((b) => b.id === id),
   },
-  Book: {
-    comments: (boardGame: BoardGame): Promise<Comment[]> => boardGame.comments,
+  BoardGame: {
+    loanInfo: (boardGame: BoardGame): Promise<LoanInfo> => loanService.getLoanInfo(boardGame.id),
   },
 };
