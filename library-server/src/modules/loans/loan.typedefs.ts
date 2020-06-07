@@ -11,7 +11,7 @@ export const typeDefs: DocumentNode = gql`
   type LoanInfo {
     canLoan: Boolean
     hasPendingLoan: Boolean
-    loaned: Boolean
+    loanedToUser: Boolean
     loanHistory: [LoanHistory]
   }
 

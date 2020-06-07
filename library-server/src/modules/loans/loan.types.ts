@@ -10,7 +10,7 @@ export interface LoanHistory {
 export interface LoanInfo {
   canLoan: boolean;
   hasPendingLoan: boolean;
-  loaned: boolean;
+  loanedToUser: boolean;
   loanHistory: LoanHistory[];
 }
 

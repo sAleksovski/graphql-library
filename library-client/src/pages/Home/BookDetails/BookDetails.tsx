@@ -2,9 +2,9 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { Avatar } from 'shared/components/Avatar';
-import { Rating } from 'shared/components/Rating';
 import { dateTimeFormatter } from 'shared/utils/date-time.formatter';
 import { BookAddComment } from './BookAddComment';
+import { LoanButton } from './LoanButton';
 import {
   Author,
   BookDetailsWrapper,
@@ -20,6 +20,7 @@ import {
   Left,
   LeftContent,
   Right,
+  StyledRating,
   Title,
 } from './styled';
 
@@ -41,6 +42,19 @@ const GET_BOOK_DETAILS = gql`
           avatarUrl
         }
       }
+      loanInfo {
+        canLoan
+        hasPendingLoan
+        loanedToUser
+        loanHistory {
+          loanStart
+          loanEnd
+          user {
+            name
+            avatarUrl
+          }
+        }
+      }
     }
   }
 `;
@@ -58,7 +72,16 @@ export function BookDetails({ bookId }: any) {
       <Left>
         <LeftContent>
           <Image src={data.book.thumbnail} alt={`Cover for ${data.book.title}`} />
-          <Rating rating={data.book.averageRating} />
+          <StyledRating rating={data.book.averageRating} />
+          <LoanButton
+            itemId={bookId}
+            propertyKey="book"
+            queryWithVariables={{
+              query: GET_BOOK_DETAILS,
+              variables: { bookId },
+            }}
+            loanInfo={data.book.loanInfo}
+          />
         </LeftContent>
       </Left>
       <Right>

@@ -3,14 +3,15 @@ import { StarEmpty, StarFull, StarHalf } from './Star';
 
 interface RatingProps {
   rating: number;
+  className?: string;
 }
 
-export function Rating({ rating }: RatingProps) {
+export function Rating({ rating, className }: RatingProps) {
   const full = Math.floor(rating);
   const half = rating % 1 > 0.2 ? 1 : 0;
   const empty = 5 - full - half;
   return (
-    <div>
+    <div className={className}>
       {Array.from({ length: full }).map((_: any, index: number) => (
         <StarFull fill="#fdd835" key={`star-full-${index}`} />
       ))}

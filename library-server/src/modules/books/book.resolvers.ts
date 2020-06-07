@@ -1,4 +1,5 @@
 import { IResolvers } from 'apollo-server';
+import { AuthenticatedUserContext } from 'modules/common';
 import { LoanInfo, loanService } from 'modules/loans';
 import { CreateBookByIsbnInput, CreateBookInput, CreateBooksByIsbnsInput, IdInput } from './book.inputs';
 import { bookService } from './book.service';
@@ -17,6 +18,7 @@ export const resolvers: IResolvers = {
       bookService.createBooksByIsbns(createBooksByIsbnsInput),
   },
   Book: {
-    loanInfo: (book: Book): Promise<LoanInfo> => loanService.getLoanInfo(book.id),
+    loanInfo: (book: Book, _, ctx: AuthenticatedUserContext): Promise<LoanInfo> =>
+      loanService.getLoanInfo(book.id, ctx.userId),
   },
 };

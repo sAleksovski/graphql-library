@@ -1,3 +1,4 @@
+import { Rating } from 'shared/components/Rating';
 import { color, weight } from 'shared/utils/styles';
 import styled from 'styled-components';
 
@@ -8,6 +9,10 @@ export const BookDetailsWrapper = styled.div`
 
 export const Image = styled.img`
   height: 300px;
+  margin-bottom: 0.5rem;
+`;
+
+export const StyledRating = styled(Rating)`
   margin-bottom: 0.5rem;
 `;
 

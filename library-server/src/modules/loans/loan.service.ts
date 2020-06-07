@@ -10,7 +10,7 @@ type LoanInfoWithoutHistory = Omit<LoanInfo, 'loanHistory'>;
 
 class LoanService {
   async requestLoan(itemId: number, userId: number): Promise<boolean> {
-    const loanInfo = await this.getLoanInfo(itemId);
+    const loanInfo = await this.getLoanInfo(itemId, userId);
     if (!loanInfo.canLoan) {
       throw new ApolloError('Cannot loan item');
     }
@@ -47,13 +47,13 @@ class LoanService {
     return true;
   }
 
-  async getLoanInfo(loanableItemId: number): Promise<LoanInfo> {
+  async getLoanInfo(loanableItemId: number, userId: number): Promise<LoanInfo> {
     const events = await createQueryBuilder(LoanEvent, 'loanEvent')
       .leftJoinAndSelect('loanEvent.user', 'user')
       .where('loanEvent.item.id = :loanableItemId', { loanableItemId })
       .getMany();
 
-    const partialLoanInfo = this.replayLoanEvents(events);
+    const partialLoanInfo = this.replayLoanEvents(events, userId);
     const loanHistory = this.generateLoanHistory(events);
 
     return {
@@ -138,7 +138,7 @@ class LoanService {
     return history;
   }
 
-  private replayLoanEvents(events: LoanEvent[]): LoanInfoWithoutHistory {
+  private replayLoanEvents(events: LoanEvent[], userId: number): LoanInfoWithoutHistory {
     return events.reduce(
       (memo: LoanInfoWithoutHistory, item: LoanEvent) => {
         switch (item.type) {
@@ -146,29 +146,29 @@ class LoanService {
             return {
               ...memo,
               canLoan: false,
-              hasPendingLoan: true,
-              loaned: false,
+              hasPendingLoan: item.user.id === userId,
+              loanedToUser: false,
             };
           case LoanEventType.LOAN_APPROVED:
             return {
               ...memo,
               canLoan: false,
               hasPendingLoan: false,
-              loaned: true,
+              loanedToUser: item.user.id === userId,
             };
           case LoanEventType.LOAN_REJECTED:
             return {
               ...memo,
               canLoan: true,
               hasPendingLoan: false,
-              loaned: false,
+              loanedToUser: false,
             };
           case LoanEventType.LOAN_FINISHED:
             return {
               ...memo,
               canLoan: true,
               hasPendingLoan: false,
-              loaned: false,
+              loanedToUser: false,
             };
           default:
             return memo;
@@ -177,7 +177,7 @@ class LoanService {
       {
         canLoan: true,
         hasPendingLoan: false,
-        loaned: false,
+        loanedToUser: false,
       },
     );
   }
