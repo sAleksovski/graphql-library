@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserRole } from './user.types';
 
 @Entity()
 export class User extends BaseEntity {
@@ -15,6 +16,12 @@ export class User extends BaseEntity {
 
   @Column()
   salt: string;
+
+  @Column({
+    type: 'simple-array',
+    default: UserRole.USER,
+  })
+  roles: UserRole[];
 
   @Column({
     nullable: true,

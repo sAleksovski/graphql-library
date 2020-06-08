@@ -1,9 +1,11 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { UserRole } from 'modules/user';
 
 const JWT_SECRET = 'TopSecretDontUseInProduction!';
 
 export interface JwtToken {
   sub: string;
+  roles: UserRole[];
 }
 
 export const signToken = (payload: object, options?: SignOptions): string =>

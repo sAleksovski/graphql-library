@@ -1,37 +1,45 @@
 import bcrypt from 'bcrypt';
+import { AuthenticatedUserContext } from 'modules/common';
 import { getCustomRepository } from 'typeorm';
 import { User } from './user.entity';
 import { InvalidCredentialsError, UserAlreadyExistsError } from './user.error';
 import { UserRepository } from './user.repository';
-import { LoginUser, RegisterUser, UserInfo } from './user.types';
+import { LoginUser, RegisterUser, UserInfo, UserRole } from './user.types';
 
 class UserService {
   private get userRepository(): UserRepository {
     return getCustomRepository(UserRepository);
   }
 
-  async login({ username, password }: LoginUser): Promise<number> {
+  async login({ username, password }: LoginUser): Promise<AuthenticatedUserContext> {
     const user = await this.userRepository.findOne({ username });
     if (user) {
       const hash = await this.hashPassword(password, user.salt);
 
       if (user.password === hash) {
-        return user.id;
+        return {
+          userId: user.id,
+          roles: user.roles,
+        };
       }
     }
 
     throw new InvalidCredentialsError();
   }
 
-  async register({ username, password }: RegisterUser): Promise<number> {
+  async register({ username, password }: RegisterUser): Promise<AuthenticatedUserContext> {
     const user = new User();
     user.username = username;
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
+    user.roles = [UserRole.USER];
 
     try {
       const savedUser = await this.userRepository.save(user);
-      return savedUser.id;
+      return {
+        userId: savedUser.id,
+        roles: savedUser.roles,
+      };
     } catch (error) {
       if (error.detail.includes('already exists')) {
         throw new UserAlreadyExistsError();
@@ -47,6 +55,7 @@ class UserService {
         id: user.id,
         name: user.name || user.username,
         avatarUrl: user.avatarUrl,
+        roles: user.roles,
       };
     }
 

@@ -16,9 +16,9 @@ export const authenticateUser = (req: Request): AuthenticatedUserContext => {
   if (!token) {
     throw new AuthenticationError('Authentication token not found.');
   }
-  const userId = verifyToken(token).sub;
-  if (!userId) {
+  const { sub, roles } = verifyToken(token);
+  if (!sub) {
     throw new AuthenticationError('Authentication token is invalid.');
   }
-  return { userId: parseInt(userId) };
+  return { userId: parseInt(sub), roles };
 };

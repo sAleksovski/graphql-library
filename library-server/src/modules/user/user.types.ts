@@ -2,6 +2,7 @@ export interface UserInfo {
   id: number;
   name: string;
   avatarUrl: string;
+  roles: UserRole[];
 }
 
 export interface RegisterUser {
@@ -12,4 +13,9 @@ export interface RegisterUser {
 export interface LoginUser {
   username: string;
   password: string;
+}
+
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
 }
