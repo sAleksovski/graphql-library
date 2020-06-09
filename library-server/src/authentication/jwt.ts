@@ -1,7 +1,6 @@
+import { JWT_SECRET } from 'config';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { UserRole } from 'modules/user';
-
-const JWT_SECRET = 'TopSecretDontUseInProduction!';
 
 export interface JwtToken {
   sub: string;

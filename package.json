@@ -1,10 +1,11 @@
 {
   "name": "graphql-library",
   "version": "1.0.0",
-  "description": "",
+  "author": "Stefan Aleksovski",
   "scripts": {
     "format": "cd library-client && npm run format && cd ../library-server && npm run format",
-    "lint": "cd library-client && npm run lint && cd ../library-server && npm run lint"
-  },
-  "author": "Stefan Aleksovski"
+    "lint": "cd library-client && npm run lint && cd ../library-server && npm run lint",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix library-client --only=dev && npm install --prefix library-client && npm run build --prefix library-client && npm install --prefix library-server --only=dev && npm install --prefix library-server && npm run build --prefix library-server",
+    "start": "npm run --prefix library-server start:production"
+  }
 }
