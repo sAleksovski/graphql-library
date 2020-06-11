@@ -1,3 +1,5 @@
+import { apolloClient } from './apollo-client';
+
 const headers = new Headers();
 headers.set('Content-Type', 'application/json');
 
@@ -38,5 +40,6 @@ export const auth = {
       .then(setAccessToken),
   logout: () => {
     localStorage.removeItem('authToken');
+    apolloClient.cache.reset();
   },
 };
