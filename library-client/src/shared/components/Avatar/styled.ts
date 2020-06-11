@@ -29,6 +29,7 @@ export const Letter = styled.div<LetterProps>`
   color: #fff;
   background: ${(props) => props.color};
   font-size: ${IMAGE_SIZE * 0.66}px;
+  user-select: none;
   & > span {
     display: flex;
     align-items: center;

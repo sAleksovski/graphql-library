@@ -4,7 +4,7 @@ export function useOnOutsideClick(
   $ignoredElementRefs: RefObject<HTMLDivElement>,
   isListening: boolean,
   onOutsideClick: Function,
-  $listeningElementRef: RefObject<HTMLDivElement>,
+  $listeningElementRef?: RefObject<HTMLDivElement>,
 ) {
   const $mouseDownTargetRef: any = useRef<HTMLDivElement>(null);
   const $ignoredElementRefsMemoized: any = [$ignoredElementRefs].flat();
