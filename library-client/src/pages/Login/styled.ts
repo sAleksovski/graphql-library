@@ -57,6 +57,10 @@ export const LoginText = styled.div`
   margin-bottom: 1rem;
 `;
 
+export const FormGroup = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
 export const Label = styled.div`
   color: rgb(94, 108, 132);
   margin-bottom: 0.25rem;
@@ -64,6 +68,11 @@ export const Label = styled.div`
 
 export const LoginError = styled(Label)`
   color: red;
+`;
+
+export const LoginRegisterToggle = styled.a`
+  cursor: pointer;
+  color: #0747a6;
 `;
 
 export const Footer = styled.div`

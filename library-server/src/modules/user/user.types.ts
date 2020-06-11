@@ -8,6 +8,7 @@ export interface UserInfo {
 export interface RegisterUser {
   username: string;
   password: string;
+  name: string;
 }
 
 export interface LoginUser {

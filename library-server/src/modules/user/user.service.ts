@@ -27,8 +27,9 @@ class UserService {
     throw new InvalidCredentialsError();
   }
 
-  async register({ username, password }: RegisterUser): Promise<AuthenticatedUserContext> {
+  async register({ username, password, name }: RegisterUser): Promise<AuthenticatedUserContext> {
     const user = new User();
+    user.name = name;
     user.username = username;
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);

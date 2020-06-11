@@ -12,9 +12,11 @@ import {
   Container,
   Footer,
   FormContainer,
+  FormGroup,
   Image,
   Label,
   LoginError,
+  LoginRegisterToggle,
   LoginText,
 } from './styled';
 
@@ -23,27 +25,40 @@ export function LoginPage() {
   const location = useLocation<{ from: { pathname: string } }>();
   const { from } = location.state || { from: { pathname: '/' } };
 
+  const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState(false);
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   if (auth.isAuthenticated()) {
     history.replace(from);
   }
 
-  function login() {
-    auth
-      .login({ username, password })
+  function doAction() {
+    if (!isLogin && password !== repeatPassword) return;
+    const action = isLogin ? 'login' : 'register';
+    auth[action]({ username, password, ...(!isLogin && { name }) })
       .then(() => {
         history.replace(from);
       })
-      .catch(() => setLoginError(true));
+      .catch(({ error: { message } }) => setLoginError(message));
   }
 
   function keyPress(event: React.KeyboardEvent) {
     if (event.key === 'Enter') {
-      login();
+      doAction();
     }
+  }
+
+  function toggleAction() {
+    setIsLogin(!isLogin);
+    setLoginError('');
+    setUsername('');
+    setPassword('');
+    setRepeatPassword('');
+    setName('');
   }
 
   return (
@@ -57,27 +72,59 @@ export function LoginPage() {
             <Column width={60}>
               <CardBody>
                 <FormContainer>
-                  <LoginText>Please sign in</LoginText>
-                  {loginError && <LoginError>Invalid username or password</LoginError>}
+                  {isLogin && <LoginText>Please sign in</LoginText>}
+                  {!isLogin && <LoginText>Please sign up</LoginText>}
+                  {loginError && <LoginError>{loginError}</LoginError>}
 
-                  <Label>Username:</Label>
-                  <Input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    onKeyPress={keyPress}
-                  ></Input>
+                  {!isLogin && (
+                    <FormGroup>
+                      <Label>Name:</Label>
+                      <Input type="text" value={name} onChange={(e) => setName(e.target.value)}></Input>
+                    </FormGroup>
+                  )}
 
-                  <Label>Password</Label>
-                  <Input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyPress={keyPress}
-                  ></Input>
+                  <FormGroup>
+                    <Label>Username:</Label>
+                    <Input
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      onKeyPress={keyPress}
+                    ></Input>
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label>Password:</Label>
+                    <Input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyPress={keyPress}
+                    ></Input>
+                  </FormGroup>
+
+                  {!isLogin && (
+                    <FormGroup>
+                      <Label>Repeat password:</Label>
+                      <Input
+                        type="password"
+                        value={repeatPassword}
+                        onChange={(e) => setRepeatPassword(e.target.value)}
+                        onKeyPress={keyPress}
+                      ></Input>
+
+                      {password && repeatPassword && password !== repeatPassword && (
+                        <LoginError>Passwords must match</LoginError>
+                      )}
+                    </FormGroup>
+                  )}
+
+                  <LoginRegisterToggle onClick={toggleAction}>
+                    {isLogin ? 'Sign up instead' : 'Sign in instead'}
+                  </LoginRegisterToggle>
 
                   <Footer>
-                    <Button onClick={login}>Sign in</Button>
+                    <Button onClick={doAction}>{isLogin ? 'Sign in' : 'Sign up'}</Button>
                   </Footer>
                 </FormContainer>
               </CardBody>

@@ -18,10 +18,10 @@ routes.post('/login', async (req: Request, res: Response) => {
 });
 
 routes.post('/register', async (req: Request, res: Response) => {
-  const { username, password } = req.body;
+  const { username, password, name } = req.body;
 
   try {
-    const userContext: AuthenticatedUserContext = await userService.register({ username, password });
+    const userContext: AuthenticatedUserContext = await userService.register({ username, password, name });
     const accessToken = signToken({ sub: userContext.userId, roles: userContext.roles });
     res.status(200).send({ accessToken });
   } catch (error) {
