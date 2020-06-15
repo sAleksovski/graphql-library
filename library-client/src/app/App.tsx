@@ -1,10 +1,9 @@
 import { ApolloProvider } from '@apollo/react-hooks';
 import React from 'react';
-import { apolloClient } from './apollo-client';
-import BaseStyles from './BaseStyles';
-import './fontStyles.css';
-import NormalizeStyles from './NormalizeStyles';
-import Routes from './Routes';
+import { apolloClient } from './graphql';
+import { Routes } from './Routes';
+import { BaseStyles, NormalizeStyles } from './styles';
+import './styles/fontStyles.css';
 
 function App() {
   return (

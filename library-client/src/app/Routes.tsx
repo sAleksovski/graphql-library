@@ -1,6 +1,7 @@
 import { createBrowserHistory } from 'history';
 import { Header } from 'pages/common/Header';
 import { HomePage } from 'pages/Home';
+import { ManageLoans } from 'pages/Loans';
 import { LoginPage } from 'pages/Login';
 import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
@@ -8,12 +9,16 @@ import { PrivateRoute } from './PrivateRoute';
 
 const history = createBrowserHistory();
 
-const Routes = () => (
+export const Routes = () => (
   <Router history={history}>
     <Switch>
       <Route path="/login">
         <LoginPage />
       </Route>
+      <PrivateRoute path="/manage-loans">
+        <Header />
+        <ManageLoans />
+      </PrivateRoute>
       <PrivateRoute path="/">
         <Header />
         <HomePage />
@@ -22,5 +27,3 @@ const Routes = () => (
     </Switch>
   </Router>
 );
-
-export default Routes;

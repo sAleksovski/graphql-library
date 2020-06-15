@@ -1,4 +1,4 @@
-import { apolloClient } from './apollo-client';
+import { apolloClient } from './graphql';
 
 const headers = new Headers();
 headers.set('Content-Type', 'application/json');
