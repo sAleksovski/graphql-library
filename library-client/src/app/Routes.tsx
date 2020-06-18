@@ -6,6 +6,7 @@ import { LoginPage } from 'pages/Login';
 import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
+import { AdminRoute } from './AdminRoute';
 
 const history = createBrowserHistory();
 
@@ -15,10 +16,10 @@ export const Routes = () => (
       <Route path="/login">
         <LoginPage />
       </Route>
-      <PrivateRoute path="/manage-loans">
+      <AdminRoute path="/manage-loans">
         <Header />
         <ManageLoans />
-      </PrivateRoute>
+      </AdminRoute>
       <PrivateRoute path="/">
         <Header />
         <HomePage />

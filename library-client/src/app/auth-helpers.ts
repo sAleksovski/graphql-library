@@ -1,3 +1,4 @@
+import jwt from 'jwt-decode';
 import { apolloClient } from './graphql';
 
 const headers = new Headers();
@@ -24,6 +25,12 @@ const setAccessToken = ({ accessToken }: { accessToken: string }) => localStorag
 export const auth = {
   getToken: () => localStorage.getItem('authToken'),
   isAuthenticated: () => !!localStorage.getItem('authToken'),
+  isAdmin: function () {
+    if (!this.isAuthenticated) return false;
+    const token = this.getToken();
+    const jwtToken = jwt<{ roles: string[] }>(token || '');
+    return jwtToken.roles.includes('ADMIN');
+  },
   login: (body: any): Promise<any> =>
     fetch('/api/auth/login', {
       ...fetchRequestParams,
