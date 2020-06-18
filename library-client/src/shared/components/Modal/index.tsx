@@ -15,7 +15,8 @@ export interface ModalProps {
   width: number;
   withCloseIcon: boolean;
   isOpen?: boolean;
-  onClose: () => void;
+  backdrop?: boolean;
+  onClose?: () => void;
   renderLink?: (link: ModalRenderLinkProps) => void;
   renderContent: (modal: ModalRenderContentProps) => void;
 }
@@ -24,6 +25,7 @@ export function Modal({
   width = 600,
   withCloseIcon = true,
   isOpen: propsIsOpen,
+  backdrop = true,
   onClose: tellParentToClose = () => {},
   renderLink = () => {},
   renderContent = () => {},
@@ -61,7 +63,7 @@ export function Modal({
       {isOpen &&
         ReactDOM.createPortal(
           <ScrollOverlay>
-            <ClickableOverlay ref={$clickableOverlayRef}>
+            <ClickableOverlay ref={$clickableOverlayRef} backdrop={backdrop}>
               <StyledModal width={width} ref={$modalRef}>
                 {withCloseIcon && <StyledCloseIcon type="close" onClick={closeModal} />}
                 {renderContent({ close: closeModal })}

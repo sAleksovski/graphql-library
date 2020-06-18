@@ -1,50 +1,28 @@
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import { ApolloError } from 'apollo-boost';
 import React from 'react';
 import { Avatar } from 'shared/components/Avatar';
 import { BookIcon } from 'shared/components/Icon';
 import { dateFormatter } from 'shared/helpers';
 import { LoanInfo, LoanListItem, LoanListWrapper, PageWraper, RequestedAt, Title } from './styled';
 
-const GET_PENDING_LOANS = gql`
-  query PendingLoans {
-    pendingLoans {
-      id
-      user {
-        name
-        avatarUrl
-      }
-      requestedAt
-      item {
-        ... on Book {
-          title
-          author
-        }
-        ... on BoardGame {
-          title
-        }
-      }
-    }
-  }
-`;
-
 interface PendingLoanListProps {
   onSelectLoan?: (loanId: number) => void;
+  loading: boolean;
+  error: ApolloError | undefined;
+  pendingLoans: any[];
 }
 
-export function PendingLoanList({ onSelectLoan = () => {} }: PendingLoanListProps) {
-  const { loading, error, data } = useQuery(GET_PENDING_LOANS);
-
+export function PendingLoanList({ onSelectLoan = () => {}, loading, error, pendingLoans }: PendingLoanListProps) {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   return (
     <PageWraper>
       <LoanListWrapper>
-        {data.pendingLoans.map((item: any, index: number) => (
+        {pendingLoans.map((item: any, index: number) => (
           <LoanListItem
             first={index === 0}
-            last={index === data.pendingLoans.length - 1}
+            last={index === pendingLoans.length - 1}
             key={item.id}
             onClick={() => onSelectLoan(item.id)}
           >

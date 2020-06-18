@@ -1,17 +1,23 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from 'shared/components/Button';
+import { Modal } from 'shared/components/Modal';
 import { dateFormatter } from 'shared/helpers';
 import {
   Author,
   BookDetailsWrapper,
+  ButtonBar,
   Description,
   Image,
   Left,
   LeftContent,
   LoanItem,
+  RejectLoanDialog,
+  RejectLoanDialogTitle,
   Right,
   StyledButton,
+  StyledInput,
   Title,
   UserLoanHistory,
 } from './styled';
@@ -39,29 +45,95 @@ const GET_PENDING_LOAN_DETAILS = gql`
   }
 `;
 
+const APPROVE_LOAN = gql`
+  mutation ApproveLoan($loanEventId: Int!) {
+    approveLoan(loanEventId: $loanEventId)
+  }
+`;
+
+const REJECT_LOAN = gql`
+  mutation rejectLoan($loanEventId: Int!, $reason: String!) {
+    rejectLoan(loanEventId: $loanEventId, reason: $reason)
+  }
+`;
+
 interface PendingLoanDetailsProps {
   loanId: number;
+  onLoanStateChanged: () => void;
 }
 
-export function PendingLoanDetails({ loanId }: PendingLoanDetailsProps) {
+export function PendingLoanDetails({ loanId, onLoanStateChanged }: PendingLoanDetailsProps) {
+  const [reason, setReason] = useState('');
   const { loading, error, data } = useQuery(GET_PENDING_LOAN_DETAILS, {
     variables: { loanId },
   });
 
+  const [approveLoan] = useMutation(APPROVE_LOAN, {
+    onCompleted({ approveLoan }) {
+      if (approveLoan) {
+        onLoanStateChanged();
+      }
+    },
+  });
+
+  const [rejectLoan] = useMutation(REJECT_LOAN, {
+    onCompleted({ rejectLoan }) {
+      if (rejectLoan) {
+        onLoanStateChanged();
+      }
+    },
+  });
+
   if (loading) return <p>Loading...</p>;
   if (error) return <div>{`Error! ${error}`}</div>;
+
+  function onApproveLoanClick() {
+    approveLoan({
+      variables: {
+        loanEventId: loanId,
+      },
+    });
+  }
+
+  function onRejectLoanClick(close: Function) {
+    rejectLoan({
+      variables: {
+        loanEventId: loanId,
+        reason,
+      },
+    });
+    close();
+  }
 
   return (
     <BookDetailsWrapper>
       <Left>
         <LeftContent>
           <Image src={data.pendingLoan.item.thumbnail} alt={`Cover for ${data.pendingLoan.item.title}`} />
-          <StyledButton block color="success">
+          <StyledButton block color="success" onClick={onApproveLoanClick}>
             Approve
           </StyledButton>
-          <StyledButton block color="danger">
-            Reject
-          </StyledButton>
+          <Modal
+            width={520}
+            withCloseIcon={true}
+            backdrop={false}
+            renderLink={({ open }) => (
+              <StyledButton block color="danger" onClick={open}>
+                Reject
+              </StyledButton>
+            )}
+            renderContent={({ close }) => (
+              <RejectLoanDialog>
+                <RejectLoanDialogTitle>Please state your reason for rejecting the loan</RejectLoanDialogTitle>
+                <StyledInput type="text" value={reason} onChange={(e) => setReason(e.target.value)} />
+                <ButtonBar>
+                  <Button color="danger" onClick={() => onRejectLoanClick(close)}>
+                    Reject
+                  </Button>
+                </ButtonBar>
+              </RejectLoanDialog>
+            )}
+          />
         </LeftContent>
       </Left>
       <Right>

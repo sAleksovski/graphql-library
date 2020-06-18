@@ -87,7 +87,7 @@ class LoanService {
 
   async getPendingLoan(loanId: number): Promise<PendingLoanInfo> {
     const loanForEvent = await LoanEvent.findOne(
-      { id: loanId },
+      { id: loanId, type: LoanEventType.LOAN_REQUESTED },
       {
         relations: ['user', 'item'],
       },

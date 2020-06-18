@@ -16,9 +16,13 @@ interface StyledModalProps {
   width?: number;
 }
 
-export const ClickableOverlay = styled.div`
+interface ClickableOverlayProps {
+  backdrop: boolean;
+}
+
+export const ClickableOverlay = styled.div<ClickableOverlayProps>`
   min-height: 100%;
-  background: rgba(9, 30, 66, 0.54);
+  ${({ backdrop }) => backdrop && `background: rgba(9, 30, 66, 0.54);`}
   display: flex;
   justify-content: center;
   align-items: center;
