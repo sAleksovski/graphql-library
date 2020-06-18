@@ -2,13 +2,15 @@ import { IResolvers } from 'apollo-server';
 import { BoardGame } from 'modules/board-games/board-game.entity';
 import { Book } from 'modules/books/database/book.entity';
 import { AuthenticatedUserContext } from 'modules/common';
-import { ApproveLoanInput, RequestLoanInput, RejectLoanInput } from './loan.input';
+import { ApproveLoanInput, PendingLoanInput, RejectLoanInput, RequestLoanInput } from './loan.input';
 import { loanService } from './loan.service';
-import { PendingLoan } from './loan.types';
+import { PendingLoan, PendingLoanInfo } from './loan.types';
 
 export const resolvers: IResolvers = {
   Query: {
     pendingLoans: (): Promise<PendingLoan[]> => loanService.getPendingLoans(),
+    pendingLoan: (_, pendingLoanInput: PendingLoanInput): Promise<PendingLoanInfo> =>
+      loanService.getPendingLoan(pendingLoanInput.loanId),
   },
   Mutation: {
     requestLoan: (_, requestLoanInput: RequestLoanInput, ctx: AuthenticatedUserContext): Promise<boolean> =>

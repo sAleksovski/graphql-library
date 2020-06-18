@@ -24,8 +24,17 @@ export const typeDefs: DocumentNode = gql`
     item: LoanableItem
   }
 
+  type PendingLoanInfo {
+    id: Int
+    user: User
+    requestedAt: Date
+    item: LoanableItem
+    userLoanHistory: [LoanHistory]
+  }
+
   extend type Query {
     pendingLoans: [PendingLoan]
+    pendingLoan(loanId: Int!): PendingLoanInfo
   }
 
   extend type Mutation {

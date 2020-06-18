@@ -4,7 +4,7 @@ import { User } from 'modules/user';
 import { createQueryBuilder } from 'typeorm';
 import { LoanEvent } from './loan-event.entity';
 import { ApproveLoanInput, RejectLoanInput } from './loan.input';
-import { LoanEventType, LoanHistory, LoanInfo, PendingLoan } from './loan.types';
+import { LoanEventType, LoanHistory, LoanInfo, PendingLoan, PendingLoanInfo } from './loan.types';
 
 type LoanInfoWithoutHistory = Omit<LoanInfo, 'loanHistory'>;
 
@@ -85,7 +85,37 @@ class LoanService {
     return pendingLoans;
   }
 
-  async verifyCanApproveOrReject(loanEventId: number): Promise<LoanEvent> {
+  async getPendingLoan(loanId: number): Promise<PendingLoanInfo> {
+    const loanForEvent = await LoanEvent.findOne(
+      { id: loanId },
+      {
+        relations: ['user', 'item'],
+      },
+    );
+    if (!loanForEvent) {
+      throw new ApolloError('Loan request does not exist');
+    }
+    const loanEventsPerUser = await createQueryBuilder(LoanEvent, 'loanEvent')
+      .where('loanEvent.user.id = :userId', { userId: loanForEvent.user.id })
+      .orderBy({
+        'loanEvent.createdAt': 'ASC',
+      })
+      .leftJoinAndSelect('loanEvent.item', 'item')
+      .leftJoinAndSelect('loanEvent.user', 'user')
+      .getMany();
+
+    const userLoanHistory = this.generateLoanHistory(loanEventsPerUser);
+
+    return {
+      id: loanId,
+      item: loanForEvent.item,
+      requestedAt: loanForEvent.createdAt,
+      user: loanForEvent.user,
+      userLoanHistory,
+    };
+  }
+
+  private async verifyCanApproveOrReject(loanEventId: number): Promise<LoanEvent> {
     const loanEvent = await LoanEvent.findOne(loanEventId, {
       relations: ['item'],
     });

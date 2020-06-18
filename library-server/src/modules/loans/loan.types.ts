@@ -21,6 +21,10 @@ export interface PendingLoan {
   item: LoanableItem;
 }
 
+export interface PendingLoanInfo extends PendingLoan {
+  userLoanHistory: LoanHistory[];
+}
+
 export enum LoanEventType {
   LOAN_REQUESTED = 'LOAN_REQUESTED',
   LOAN_APPROVED = 'LOAN_APPROVED',
