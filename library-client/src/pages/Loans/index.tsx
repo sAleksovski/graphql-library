@@ -1,41 +1,30 @@
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 import React from 'react';
-
-const GET_PENDING_LOANS = gql`
-  query PendingLoans {
-    pendingLoans {
-      id
-      user {
-        name
-      }
-      requestedAt
-      item {
-        ... on Book {
-          title
-          author
-        }
-        ... on BoardGame {
-          title
-        }
-      }
-    }
-  }
-`;
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Modal } from 'shared/components/Modal';
+import { PendingLoanDetails } from './PendingLoanDetails';
+import { PendingLoanList } from './PendingLoanList';
 
 export function ManageLoans() {
-  const { loading, error, data } = useQuery(GET_PENDING_LOANS);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  const match = useRouteMatch();
+  const history = useHistory();
 
   return (
-    <div>
-      {data.pendingLoans.map((item: any) => (
-        <div key={item.id}>
-          {item.id} {item.item.title}
-        </div>
-      ))}
-    </div>
+    <Switch>
+      <Route path={match.path}>
+        <PendingLoanList onSelectLoan={(id: number) => history.push(`${match.path}/${id}`)} />
+        <Route
+          path={`${match.path}/:loanId`}
+          render={(routeProps) => (
+            <Modal
+              isOpen
+              width={1040}
+              withCloseIcon={true}
+              onClose={() => history.push(match.url)}
+              renderContent={() => <PendingLoanDetails loanId={+routeProps.match.params.loanId} />}
+            />
+          )}
+        />
+      </Route>
+    </Switch>
   );
 }

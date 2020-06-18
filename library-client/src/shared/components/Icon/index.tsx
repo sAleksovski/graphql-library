@@ -1,1 +1,1 @@
-export { IoMdClose as CloseIcon } from 'react-icons/io';
+export { IoMdClose as CloseIcon, IoMdBook as BookIcon } from 'react-icons/io';
