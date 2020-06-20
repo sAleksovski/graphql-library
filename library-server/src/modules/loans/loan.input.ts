@@ -11,6 +11,10 @@ export interface RejectLoanInput {
   reason: string;
 }
 
+export interface ReturnLoanInput {
+  loanEventId: number;
+}
+
 export interface PendingLoanInput {
   loanId: number;
 }

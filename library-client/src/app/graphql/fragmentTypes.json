@@ -3,7 +3,7 @@
     "types": [
       {
         "kind": "UNION",
-        "name": "LoanableItem",
+        "name": "LibraryItem",
         "possibleTypes": [
           {
             "name": "Book"

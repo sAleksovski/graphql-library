@@ -13,6 +13,8 @@ import {
   Left,
   LeftContent,
   LoanItem,
+  LoanItemDate,
+  LoanItemTitle,
   RejectLoanDialog,
   RejectLoanDialogTitle,
   Right,
@@ -40,6 +42,11 @@ const GET_PENDING_LOAN_DETAILS = gql`
       userLoanHistory {
         loanStart
         loanEnd
+        item {
+          ... on Book {
+            title
+          }
+        }
       }
     }
   }
@@ -143,9 +150,12 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged }: PendingLoanDe
 
         <UserLoanHistory>User loan history:</UserLoanHistory>
         {data.pendingLoan.userLoanHistory.map((userLoanHistory: any) => (
-          <LoanItem key={userLoanHistory.loanStart} isReturned={!!userLoanHistory.loanEnd}>
-            {dateFormatter.format(new Date(userLoanHistory.loanStart))} →{' '}
-            {userLoanHistory.loanEnd ? dateFormatter.format(new Date(userLoanHistory.loanEnd)) : 'Not returned'}
+          <LoanItem key={userLoanHistory.loanStart}>
+            <LoanItemTitle>{userLoanHistory.item.title}</LoanItemTitle>
+            <LoanItemDate isReturned={!!userLoanHistory.loanEnd}>
+              {dateFormatter.format(new Date(userLoanHistory.loanStart))} →{' '}
+              {userLoanHistory.loanEnd ? dateFormatter.format(new Date(userLoanHistory.loanEnd)) : 'Not returned'}
+            </LoanItemDate>
           </LoanItem>
         ))}
       </Right>

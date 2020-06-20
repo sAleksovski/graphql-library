@@ -63,19 +63,26 @@ export const UserLoanHistory = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-interface LoanItemProps {
+export const LoanItem = styled.div`
+  margin-bottom: 1rem;
+`;
+
+interface LoanItemPropsDate {
   isReturned: boolean;
 }
 
-export const LoanItem = styled.div<LoanItemProps>`
+export const LoanItemDate = styled.div<LoanItemPropsDate>`
   font-size: 1rem;
-  margin-bottom: 0.25rem;
 
   ${({ isReturned }) =>
     !isReturned &&
     `
     color: ${color.danger}
   `};
+`;
+
+export const LoanItemTitle = styled.div`
+  font-size: 1.25rem;
 `;
 
 export const StyledButton = styled(Button)`

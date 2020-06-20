@@ -1,9 +1,9 @@
+import { LibraryItem } from 'modules/common';
 import { ChildEntity, Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { LoanableItem } from 'modules/common';
 import { BookCategory } from './book-category.entity';
 
 @ChildEntity('BOOK')
-export class Book extends LoanableItem {
+export class Book extends LibraryItem {
   @PrimaryGeneratedColumn()
   id: number;
 

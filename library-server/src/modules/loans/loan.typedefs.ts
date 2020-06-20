@@ -8,6 +8,13 @@ export const typeDefs: DocumentNode = gql`
     loanEnd: Date
   }
 
+  type LoanHistoryWithItem {
+    user: User
+    loanStart: Date
+    loanEnd: Date
+    item: LibraryItem
+  }
+
   type LoanInfo {
     canLoan: Boolean
     hasPendingLoan: Boolean
@@ -15,21 +22,21 @@ export const typeDefs: DocumentNode = gql`
     loanHistory: [LoanHistory]
   }
 
-  union LoanableItem = Book | BoardGame
+  union LibraryItem = Book | BoardGame
 
   type PendingLoan {
     id: Int
     user: User
     requestedAt: Date
-    item: LoanableItem
+    item: LibraryItem
   }
 
   type PendingLoanInfo {
     id: Int
     user: User
     requestedAt: Date
-    item: LoanableItem
-    userLoanHistory: [LoanHistory]
+    item: LibraryItem
+    userLoanHistory: [LoanHistoryWithItem]
   }
 
   extend type Query {
@@ -41,5 +48,6 @@ export const typeDefs: DocumentNode = gql`
     requestLoan(itemId: Int!): Boolean
     approveLoan(loanEventId: Int!): Boolean
     rejectLoan(loanEventId: Int!, reason: String!): Boolean
+    returnLoan(loanEventId: Int!): Boolean
   }
 `;

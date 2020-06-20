@@ -1,10 +1,10 @@
 import { ApolloError } from 'apollo-server';
-import { LoanableItem } from 'modules/common';
+import { LibraryItem } from 'modules/common';
 import { User } from 'modules/user';
 import { createQueryBuilder } from 'typeorm';
 import { LoanEvent } from './loan-event.entity';
-import { ApproveLoanInput, RejectLoanInput } from './loan.input';
-import { LoanEventType, LoanHistory, LoanInfo, PendingLoan, PendingLoanInfo } from './loan.types';
+import { ApproveLoanInput, RejectLoanInput, ReturnLoanInput } from './loan.input';
+import { LoanEventType, LoanHistory, LoanHistoryWithItem, LoanInfo, PendingLoan, PendingLoanInfo } from './loan.types';
 
 type LoanInfoWithoutHistory = Omit<LoanInfo, 'loanHistory'>;
 
@@ -15,7 +15,7 @@ class LoanService {
       throw new ApolloError('Cannot loan item');
     }
     const loanEvent = new LoanEvent();
-    loanEvent.item = await this.getLoanableItem(itemId);
+    loanEvent.item = await this.getLibraryItem(itemId);
     loanEvent.user = this.getUser(userId);
     loanEvent.type = LoanEventType.LOAN_REQUESTED;
     await loanEvent.save();
@@ -27,7 +27,8 @@ class LoanService {
 
     const approvelLoanEvent = new LoanEvent();
     approvelLoanEvent.item = loanEvent.item;
-    approvelLoanEvent.user = this.getUser(userId);
+    approvelLoanEvent.user = loanEvent.user;
+    approvelLoanEvent.admin = this.getUser(userId);
     approvelLoanEvent.type = LoanEventType.LOAN_APPROVED;
     await approvelLoanEvent.save();
 
@@ -39,7 +40,8 @@ class LoanService {
 
     const rejectLoanEvent = new LoanEvent();
     rejectLoanEvent.item = loanEvent.item;
-    rejectLoanEvent.user = this.getUser(userId);
+    rejectLoanEvent.user = loanEvent.user;
+    rejectLoanEvent.admin = this.getUser(userId);
     rejectLoanEvent.type = LoanEventType.LOAN_REJECTED;
     rejectLoanEvent.reason = reason;
     await rejectLoanEvent.save();
@@ -47,10 +49,33 @@ class LoanService {
     return true;
   }
 
-  async getLoanInfo(loanableItemId: number, userId: number): Promise<LoanInfo> {
+  async returnLoan({ loanEventId }: ReturnLoanInput, userId: number): Promise<boolean> {
+    const approvedEvent = await LoanEvent.findOne(
+      {
+        id: loanEventId,
+        type: LoanEventType.LOAN_APPROVED,
+      },
+      {
+        relations: ['user', 'item'],
+      },
+    );
+    if (!approvedEvent) {
+      throw new ApolloError('Cannot loan item');
+    }
+
+    const loanEvent = new LoanEvent();
+    loanEvent.item = approvedEvent.item;
+    loanEvent.user = approvedEvent.user;
+    loanEvent.admin = this.getUser(userId);
+    loanEvent.type = LoanEventType.LOAN_FINISHED;
+    await loanEvent.save();
+    return true;
+  }
+
+  async getLoanInfo(libraryItemId: number, userId: number): Promise<LoanInfo> {
     const events = await createQueryBuilder(LoanEvent, 'loanEvent')
       .leftJoinAndSelect('loanEvent.user', 'user')
-      .where('loanEvent.item.id = :loanableItemId', { loanableItemId })
+      .where('loanEvent.item.id = :libraryItemId', { libraryItemId })
       .getMany();
 
     const partialLoanInfo = this.replayLoanEvents(events, userId);
@@ -63,7 +88,7 @@ class LoanService {
   }
 
   async getPendingLoans(): Promise<PendingLoan[]> {
-    const lastEventPerLoanableItem = await createQueryBuilder(LoanEvent, 'loanEvent')
+    const lastEventPerLibraryItem = await createQueryBuilder(LoanEvent, 'loanEvent')
       .distinctOn(['loanEvent.item.id'])
       .orderBy({
         'loanEvent.item.id': 'ASC',
@@ -73,7 +98,7 @@ class LoanService {
       .leftJoinAndSelect('loanEvent.item', 'item')
       .getMany();
 
-    const pendingLoanEvents = lastEventPerLoanableItem.filter((event) => event.type === LoanEventType.LOAN_REQUESTED);
+    const pendingLoanEvents = lastEventPerLibraryItem.filter((event) => event.type === LoanEventType.LOAN_REQUESTED);
 
     const pendingLoans: PendingLoan[] = pendingLoanEvents.map((event) => ({
       id: event.id,
@@ -104,7 +129,7 @@ class LoanService {
       .leftJoinAndSelect('loanEvent.user', 'user')
       .getMany();
 
-    const userLoanHistory = this.generateLoanHistory(loanEventsPerUser);
+    const userLoanHistory = this.generateUserLoanHistory(loanEventsPerUser);
 
     return {
       id: loanId,
@@ -117,7 +142,7 @@ class LoanService {
 
   private async verifyCanApproveOrReject(loanEventId: number): Promise<LoanEvent> {
     const loanEvent = await LoanEvent.findOne(loanEventId, {
-      relations: ['item'],
+      relations: ['item', 'user'],
     });
 
     if (!loanEvent) {
@@ -212,10 +237,48 @@ class LoanService {
     );
   }
 
-  private async getLoanableItem(itemId: number): Promise<LoanableItem> {
-    const loanableItem = await LoanableItem.findOne(itemId);
-    if (loanableItem) {
-      return loanableItem;
+  private generateUserLoanHistory(events: LoanEvent[]): LoanHistoryWithItem[] {
+    const meaningfulEvents = events.filter((event: LoanEvent) =>
+      [LoanEventType.LOAN_APPROVED, LoanEventType.LOAN_FINISHED].includes(event.type),
+    );
+    const history: LoanHistoryWithItem[] = [];
+
+    const eventsPerItem: { [key: string]: LoanEvent[] } = meaningfulEvents.reduce(
+      (memo: { [key: string]: LoanEvent[] }, event: LoanEvent) => ({
+        ...memo,
+        [event.item.id]: [...(memo[event.item.id] || []), event],
+      }),
+      {},
+    );
+
+    Object.values(eventsPerItem).forEach((events: LoanEvent[]) => {
+      let newHistoryItem: Partial<LoanHistoryWithItem> = {};
+
+      for (const event of events) {
+        if (event.type === LoanEventType.LOAN_APPROVED) {
+          newHistoryItem.user = event.user;
+          newHistoryItem.loanStart = event.createdAt;
+          newHistoryItem.item = event.item;
+        }
+        if (event.type === LoanEventType.LOAN_FINISHED) {
+          newHistoryItem.loanEnd = event.createdAt;
+          history.push(newHistoryItem as LoanHistoryWithItem);
+          newHistoryItem = {};
+        }
+      }
+
+      if (newHistoryItem.user) {
+        history.push(newHistoryItem as LoanHistoryWithItem);
+      }
+    });
+
+    return history;
+  }
+
+  private async getLibraryItem(itemId: number): Promise<LibraryItem> {
+    const libraryItem = await LibraryItem.findOne(itemId);
+    if (libraryItem) {
+      return libraryItem;
     }
     throw new ApolloError(`Item with id "${itemId}" does not exist`, 'NOT_FOUND');
   }

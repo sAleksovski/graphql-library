@@ -1,10 +1,14 @@
-import { LoanableItem } from 'modules/common';
+import { LibraryItem } from 'modules/common';
 import { UserInfo } from 'modules/user';
 
 export interface LoanHistory {
   user: UserInfo;
   loanStart: Date;
   loanEnd?: Date;
+}
+
+export interface LoanHistoryWithItem extends LoanHistory {
+  item: LibraryItem;
 }
 
 export interface LoanInfo {
@@ -18,11 +22,11 @@ export interface PendingLoan {
   id: number;
   user: UserInfo;
   requestedAt: Date;
-  item: LoanableItem;
+  item: LibraryItem;
 }
 
 export interface PendingLoanInfo extends PendingLoan {
-  userLoanHistory: LoanHistory[];
+  userLoanHistory: LoanHistoryWithItem[];
 }
 
 export enum LoanEventType {

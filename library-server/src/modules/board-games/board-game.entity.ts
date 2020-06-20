@@ -1,8 +1,8 @@
+import { LibraryItem } from 'modules/common';
 import { ChildEntity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { LoanableItem } from 'modules/common';
 
 @ChildEntity('BOARD_GAME')
-export class BoardGame extends LoanableItem {
+export class BoardGame extends LibraryItem {
   @PrimaryGeneratedColumn()
   id: number;
 

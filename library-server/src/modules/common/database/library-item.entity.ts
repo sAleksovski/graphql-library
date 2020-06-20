@@ -9,7 +9,7 @@ import { Comment } from './comment.entity';
     name: 'type',
   },
 })
-export class LoanableItem extends BaseEntity {
+export class LibraryItem extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -1,6 +1,6 @@
 import { User } from 'modules/user';
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { LoanableItem } from './loanable-item.entity';
+import { LibraryItem } from './library-item.entity';
 
 @Entity({
   orderBy: {
@@ -11,8 +11,8 @@ export class Comment extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => LoanableItem, (loanableItem) => loanableItem.comments)
-  item: LoanableItem;
+  @ManyToOne(() => LibraryItem, (libraryItem) => libraryItem.comments)
+  item: LibraryItem;
 
   @Column()
   content: string;

@@ -1,21 +1,21 @@
 import { ApolloError } from 'apollo-server';
 import { User } from 'modules/user';
 import { CreateCommentInput } from './common.inputs';
-import { Comment, LoanableItem } from './database';
+import { Comment, LibraryItem } from './database';
 
 class CommentService {
   async createComment({ comment: { itemId, content } }: CreateCommentInput, userId: number): Promise<Comment[]> {
-    const loanableItem = await this.getLoanableItem(itemId);
+    const libraryItem = await this.getLibraryItem(itemId);
     const user = this.getUser(userId);
-    const comment = this.buildComment(loanableItem, user, content);
+    const comment = this.buildComment(libraryItem, user, content);
     await comment.save();
-    return loanableItem.comments;
+    return libraryItem.comments;
   }
 
-  private async getLoanableItem(itemId: number): Promise<LoanableItem> {
-    const loanableItem = await LoanableItem.findOne(itemId);
-    if (loanableItem) {
-      return loanableItem;
+  private async getLibraryItem(itemId: number): Promise<LibraryItem> {
+    const libraryItem = await LibraryItem.findOne(itemId);
+    if (libraryItem) {
+      return libraryItem;
     }
     throw new ApolloError(`Item with id "${itemId}" does not exist`, 'NOT_FOUND');
   }
@@ -26,9 +26,9 @@ class CommentService {
     return user;
   }
 
-  private buildComment(loanableItem: LoanableItem, user: User, content: string): Comment {
+  private buildComment(libraryItem: LibraryItem, user: User, content: string): Comment {
     const comment = new Comment();
-    comment.item = loanableItem;
+    comment.item = libraryItem;
     comment.user = Promise.resolve(user);
     comment.content = content;
     return comment;

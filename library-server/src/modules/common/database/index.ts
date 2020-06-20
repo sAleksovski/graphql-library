@@ -1,2 +1,2 @@
 export * from './comment.entity';
-export * from './loanable-item.entity';
+export * from './library-item.entity';
