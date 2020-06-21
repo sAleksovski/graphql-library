@@ -1,3 +1,5 @@
+import { AdminRoute } from 'app/AdminRoute';
+import { auth } from 'app/auth-helpers';
 import React from 'react';
 import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { Modal } from 'shared/components/Modal';
@@ -15,17 +17,19 @@ export function ManageLoans() {
 
   return (
     <PageWraper>
-      <Tabs>
-        <Tab to={`${match.path}/my`}>My Loans</Tab>
-        <Tab to={`${match.path}/pending`}>Pending Loans</Tab>
-        <Tab to={`${match.path}/active`}>Active Loans</Tab>
-      </Tabs>
+      {auth.isAdmin() && (
+        <Tabs>
+          <Tab to={`${match.path}/my`}>My Loans</Tab>
+          <Tab to={`${match.path}/pending`}>Pending Loans</Tab>
+          <Tab to={`${match.path}/active`}>Active Loans</Tab>
+        </Tabs>
+      )}
       <Switch>
         <Redirect exact from={`${match.path}`} to={`${match.path}/my`} />
         <Route path={`${match.path}/my`}>
           <MyLoans />
         </Route>
-        <Route path={`${match.path}/pending`}>
+        <AdminRoute path={`${match.path}/pending`}>
           <PendingLoanList onSelectLoan={(id: number) => history.push(`${match.path}/pending/${id}`)} />
           <Route
             path={`${match.path}/pending/:loanId`}
@@ -41,9 +45,9 @@ export function ManageLoans() {
               />
             )}
           />
-        </Route>
+        </AdminRoute>
 
-        <Route path={`${match.path}/active`}>
+        <AdminRoute path={`${match.path}/active`}>
           <ActiveLoanList onSelectLoan={(id: number) => history.push(`${match.path}/active/${id}`)} />
           <Route
             path={`${match.path}/active/:loanId`}
@@ -59,7 +63,7 @@ export function ManageLoans() {
               />
             )}
           />
-        </Route>
+        </AdminRoute>
       </Switch>
     </PageWraper>
   );

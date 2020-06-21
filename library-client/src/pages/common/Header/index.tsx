@@ -22,8 +22,8 @@ export function Header() {
       </Left>
 
       <Right>
-        <Link to="/manage-loans">
-          Manage loans <Badge>3</Badge>
+        <Link to="/loans">
+          Loans <Badge>3</Badge>
         </Link>
         <Dropdown>
           <UserAvatar />
