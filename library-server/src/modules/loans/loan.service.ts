@@ -11,6 +11,7 @@ import {
   LoanHistory,
   LoanHistoryWithItem,
   LoanInfo,
+  MyLoan,
   PendingLoan,
   PendingLoanInfo,
 } from './loan.types';
@@ -202,6 +203,19 @@ class LoanService {
     };
   }
 
+  async getMyLoans(userId: number): Promise<MyLoan[]> {
+    const loanEventsPerUser = await createQueryBuilder(LoanEvent, 'loanEvent')
+      .where('loanEvent.user.id = :userId', { userId })
+      .orderBy({
+        'loanEvent.createdAt': 'ASC',
+      })
+      .leftJoinAndSelect('loanEvent.item', 'item')
+      .leftJoinAndSelect('loanEvent.user', 'user')
+      .getMany();
+
+    return this.generateMyLoanHistory(loanEventsPerUser);
+  }
+
   private async verifyCanApproveOrReject(loanEventId: number): Promise<LoanEvent> {
     const loanEvent = await LoanEvent.findOne(loanEventId, {
       relations: ['item', 'user'],
@@ -331,6 +345,52 @@ class LoanService {
 
       if (newHistoryItem.user) {
         history.push(newHistoryItem as LoanHistoryWithItem);
+      }
+    });
+
+    return history;
+  }
+
+  private generateMyLoanHistory(events: LoanEvent[]): MyLoan[] {
+    const history: MyLoan[] = [];
+
+    const eventsPerItem: { [key: string]: LoanEvent[] } = events.reduce(
+      (memo: { [key: string]: LoanEvent[] }, event: LoanEvent) => ({
+        ...memo,
+        [event.item.id]: [...(memo[event.item.id] || []), event],
+      }),
+      {},
+    );
+
+    Object.values(eventsPerItem).forEach((events: LoanEvent[]) => {
+      let newHistoryItem: Partial<MyLoan> = {};
+
+      for (const event of events) {
+        newHistoryItem.status = event.type;
+        newHistoryItem.item = event.item;
+        newHistoryItem.id = event.id;
+
+        if (event.type === LoanEventType.LOAN_REQUESTED) {
+          newHistoryItem.loanRequested = event.createdAt;
+        }
+        if (event.type === LoanEventType.LOAN_APPROVED) {
+          newHistoryItem.loanDecided = event.createdAt;
+        }
+        if (event.type === LoanEventType.LOAN_REJECTED) {
+          newHistoryItem.loanDecided = event.createdAt;
+          newHistoryItem.reason = event.reason;
+          history.push(newHistoryItem as MyLoan);
+          newHistoryItem = {};
+        }
+        if (event.type === LoanEventType.LOAN_FINISHED) {
+          newHistoryItem.loanFinished = event.createdAt;
+          history.push(newHistoryItem as MyLoan);
+          newHistoryItem = {};
+        }
+      }
+
+      if (newHistoryItem.status) {
+        history.push(newHistoryItem as MyLoan);
       }
     });
 

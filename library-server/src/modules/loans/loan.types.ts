@@ -40,6 +40,16 @@ export interface ActiveLoanInfo extends ActiveLoan {
   userLoanHistory: LoanHistoryWithItem[];
 }
 
+export interface MyLoan {
+  id: number;
+  item: LibraryItem;
+  loanRequested: Date;
+  loanDecided?: Date;
+  loanFinished?: Date;
+  reason?: string;
+  status: LoanEventType;
+}
+
 export enum LoanEventType {
   LOAN_REQUESTED = 'LOAN_REQUESTED',
   LOAN_APPROVED = 'LOAN_APPROVED',

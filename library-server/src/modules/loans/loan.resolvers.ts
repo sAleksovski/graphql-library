@@ -8,10 +8,10 @@ import {
   PendingLoanInput,
   RejectLoanInput,
   RequestLoanInput,
-  ReturnLoanInput
+  ReturnLoanInput,
 } from './loan.input';
 import { loanService } from './loan.service';
-import { ActiveLoan, ActiveLoanInfo, PendingLoan, PendingLoanInfo } from './loan.types';
+import { ActiveLoan, ActiveLoanInfo, MyLoan, PendingLoan, PendingLoanInfo } from './loan.types';
 
 export const resolvers: IResolvers = {
   Query: {
@@ -21,6 +21,7 @@ export const resolvers: IResolvers = {
     activeLoans: (): Promise<ActiveLoan[]> => loanService.getActiveLoans(),
     activeLoan: (_, activeLoanInput: ActiveLoanInput): Promise<ActiveLoanInfo> =>
       loanService.getActiveLoan(activeLoanInput.loanId),
+    myLoans: (_, __, ctx: AuthenticatedUserContext): Promise<MyLoan[]> => loanService.getMyLoans(ctx.userId),
   },
   Mutation: {
     requestLoan: (_, requestLoanInput: RequestLoanInput, ctx: AuthenticatedUserContext): Promise<boolean> =>
