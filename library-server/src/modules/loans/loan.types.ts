@@ -25,6 +25,13 @@ export interface PendingLoan {
   item: LibraryItem;
 }
 
+export interface ActiveLoan {
+  id: number;
+  user: UserInfo;
+  loanedAt: Date;
+  item: LibraryItem;
+}
+
 export interface PendingLoanInfo extends PendingLoan {
   userLoanHistory: LoanHistoryWithItem[];
 }

@@ -4,13 +4,14 @@ import { Book } from 'modules/books/database/book.entity';
 import { AuthenticatedUserContext } from 'modules/common';
 import { ApproveLoanInput, PendingLoanInput, RejectLoanInput, RequestLoanInput, ReturnLoanInput } from './loan.input';
 import { loanService } from './loan.service';
-import { PendingLoan, PendingLoanInfo } from './loan.types';
+import { ActiveLoan, PendingLoan, PendingLoanInfo } from './loan.types';
 
 export const resolvers: IResolvers = {
   Query: {
     pendingLoans: (): Promise<PendingLoan[]> => loanService.getPendingLoans(),
     pendingLoan: (_, pendingLoanInput: PendingLoanInput): Promise<PendingLoanInfo> =>
       loanService.getPendingLoan(pendingLoanInput.loanId),
+    activeLoans: (): Promise<ActiveLoan[]> => loanService.getActiveLoans(),
   },
   Mutation: {
     requestLoan: (_, requestLoanInput: RequestLoanInput, ctx: AuthenticatedUserContext): Promise<boolean> =>

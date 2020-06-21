@@ -4,7 +4,15 @@ import { User } from 'modules/user';
 import { createQueryBuilder } from 'typeorm';
 import { LoanEvent } from './loan-event.entity';
 import { ApproveLoanInput, RejectLoanInput, ReturnLoanInput } from './loan.input';
-import { LoanEventType, LoanHistory, LoanHistoryWithItem, LoanInfo, PendingLoan, PendingLoanInfo } from './loan.types';
+import {
+  ActiveLoan,
+  LoanEventType,
+  LoanHistory,
+  LoanHistoryWithItem,
+  LoanInfo,
+  PendingLoan,
+  PendingLoanInfo,
+} from './loan.types';
 
 type LoanInfoWithoutHistory = Omit<LoanInfo, 'loanHistory'>;
 
@@ -138,6 +146,29 @@ class LoanService {
       user: loanForEvent.user,
       userLoanHistory,
     };
+  }
+
+  async getActiveLoans(): Promise<ActiveLoan[]> {
+    const lastEventPerLibraryItem = await createQueryBuilder(LoanEvent, 'loanEvent')
+      .distinctOn(['loanEvent.item.id'])
+      .orderBy({
+        'loanEvent.item.id': 'ASC',
+        'loanEvent.createdAt': 'DESC',
+      })
+      .leftJoinAndSelect('loanEvent.user', 'user')
+      .leftJoinAndSelect('loanEvent.item', 'item')
+      .getMany();
+
+    const activeLoanEvents = lastEventPerLibraryItem.filter((event) => event.type === LoanEventType.LOAN_APPROVED);
+
+    const activeLoans: ActiveLoan[] = activeLoanEvents.map((event) => ({
+      id: event.id,
+      item: event.item,
+      loanedAt: event.createdAt,
+      user: event.user,
+    }));
+
+    return activeLoans;
   }
 
   private async verifyCanApproveOrReject(loanEventId: number): Promise<LoanEvent> {
