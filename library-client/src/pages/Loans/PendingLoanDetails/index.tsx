@@ -69,7 +69,7 @@ interface PendingLoanDetailsProps {
   onLoanStateChanged: () => void;
 }
 
-export function PendingLoanDetails({ loanId, onLoanStateChanged }: PendingLoanDetailsProps) {
+export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: PendingLoanDetailsProps) {
   const [reason, setReason] = useState('');
   const { loading, error, data } = useQuery(GET_PENDING_LOAN_DETAILS, {
     variables: { loanId },

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { Modal } from 'shared/components/Modal';
+import { Tab, Tabs } from 'shared/components/Tabs';
 import { BookDetails } from './BookDetails';
 import { BookList } from './BookList';
-import { HomePageWraper, Tab, Tabs } from './styled';
+import { HomePageWraper } from './styled';
 
 export function HomePage() {
   const match = useRouteMatch();

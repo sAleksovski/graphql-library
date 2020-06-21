@@ -7,15 +7,15 @@ import { BookIcon } from 'shared/components/Icon';
 import { dateFormatter } from 'shared/helpers';
 import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
 
-const GET_PENDING_LOANS = gql`
-  query PendingLoans {
-    pendingLoans {
+const GET_ACTIVE_LOANS = gql`
+  query ActiveLoans {
+    activeLoans {
       id
       user {
         name
         avatarUrl
       }
-      requestedAt
+      loanedAt
       item {
         ... on Book {
           title
@@ -29,14 +29,14 @@ const GET_PENDING_LOANS = gql`
   }
 `;
 
-interface PendingLoanListProps {
+interface ActiveLoanListProps {
   onSelectLoan?: (loanId: number) => void;
 }
 
-export function PendingLoanList({ onSelectLoan = () => {} }: PendingLoanListProps) {
+export function ActiveLoanList({ onSelectLoan = () => {} }: ActiveLoanListProps) {
   const match = useRouteMatch();
 
-  const { loading, error, data, refetch } = useQuery(GET_PENDING_LOANS, {
+  const { loading, error, data, refetch } = useQuery(GET_ACTIVE_LOANS, {
     fetchPolicy: 'no-cache',
   });
 
@@ -51,17 +51,17 @@ export function PendingLoanList({ onSelectLoan = () => {} }: PendingLoanListProp
 
   return (
     <LoanListWrapper>
-      {data.pendingLoans.map((item: any, index: number) => (
+      {data.activeLoans.map((item: any, index: number) => (
         <LoanListItem
           first={index === 0}
-          last={index === data.pendingLoans.length - 1}
+          last={index === data.activeLoans.length - 1}
           key={item.id}
           onClick={() => onSelectLoan(item.id)}
         >
           <Avatar avatarUrl={item.user.avatarUrl} name={item.user.name} />
           <LoanInfo>
             <Title>{item.item.title}</Title>
-            <LoanDate>{dateFormatter.format(new Date(item.requestedAt))}</LoanDate>
+            <LoanDate>{dateFormatter.format(new Date(item.loanedAt))}</LoanDate>
           </LoanInfo>
           <BookIcon size={24} />
         </LoanListItem>

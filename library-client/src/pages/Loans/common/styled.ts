@@ -1,11 +1,5 @@
 import styled from 'styled-components';
 
-export const PageWraper = styled.div`
-  max-width: 1100px;
-  margin: 5rem auto;
-  align-items: center;
-`;
-
 export const LoanListWrapper = styled.div`
   box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.12);
   border-radius: 1rem;
@@ -56,7 +50,7 @@ export const Title = styled.div`
   margin-bottom: 0.25rem;
 `;
 
-export const RequestedAt = styled.div`
+export const LoanDate = styled.div`
   font-size: 1rem;
   font-weight: 500;
   color: #495057;
