@@ -46,10 +46,19 @@ export const typeDefs: DocumentNode = gql`
     userLoanHistory: [LoanHistoryWithItem]
   }
 
+  type ActiveLoanInfo {
+    id: Int
+    user: User
+    loanedAt: Date
+    item: LibraryItem
+    userLoanHistory: [LoanHistoryWithItem]
+  }
+
   extend type Query {
     pendingLoans: [PendingLoan]
     pendingLoan(loanId: Int!): PendingLoanInfo
     activeLoans: [ActiveLoan]
+    activeLoan(loanId: Int!): ActiveLoanInfo
   }
 
   extend type Mutation {

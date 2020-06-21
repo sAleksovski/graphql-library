@@ -7,22 +7,19 @@ import { dateFormatter } from 'shared/helpers';
 import {
   Author,
   BookDetailsWrapper,
-  ButtonBar,
   Description,
+  DetailsTitle,
   Image,
   Left,
   LeftContent,
   LoanItem,
   LoanItemDate,
   LoanItemTitle,
-  RejectLoanDialog,
-  RejectLoanDialogTitle,
   Right,
   StyledButton,
-  StyledInput,
-  Title,
   UserLoanHistory,
-} from './styled';
+} from '../common';
+import { ButtonBar, RejectLoanDialog, RejectLoanDialogTitle, StyledInput } from './styled';
 
 const GET_PENDING_LOAN_DETAILS = gql`
   query PendingLoan($loanId: Int!) {
@@ -144,7 +141,7 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
         </LeftContent>
       </Left>
       <Right>
-        <Title>{data.pendingLoan.item.title}</Title>
+        <DetailsTitle>{data.pendingLoan.item.title}</DetailsTitle>
         <Author>{data.pendingLoan.item.author}</Author>
         <Description>{data.pendingLoan.item.description}</Description>
 

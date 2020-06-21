@@ -6,6 +6,7 @@ import { LoanEvent } from './loan-event.entity';
 import { ApproveLoanInput, RejectLoanInput, ReturnLoanInput } from './loan.input';
 import {
   ActiveLoan,
+  ActiveLoanInfo,
   LoanEventType,
   LoanHistory,
   LoanHistoryWithItem,
@@ -169,6 +170,36 @@ class LoanService {
     }));
 
     return activeLoans;
+  }
+
+  async getActiveLoan(loanId: number): Promise<ActiveLoanInfo> {
+    const loanForEvent = await LoanEvent.findOne(
+      { id: loanId, type: LoanEventType.LOAN_APPROVED },
+      {
+        relations: ['user', 'item'],
+      },
+    );
+    if (!loanForEvent) {
+      throw new ApolloError('Loan request does not exist');
+    }
+    const loanEventsPerUser = await createQueryBuilder(LoanEvent, 'loanEvent')
+      .where('loanEvent.user.id = :userId', { userId: loanForEvent.user.id })
+      .orderBy({
+        'loanEvent.createdAt': 'ASC',
+      })
+      .leftJoinAndSelect('loanEvent.item', 'item')
+      .leftJoinAndSelect('loanEvent.user', 'user')
+      .getMany();
+
+    const userLoanHistory = this.generateUserLoanHistory(loanEventsPerUser);
+
+    return {
+      id: loanId,
+      item: loanForEvent.item,
+      loanedAt: loanForEvent.createdAt,
+      user: loanForEvent.user,
+      userLoanHistory,
+    };
   }
 
   private async verifyCanApproveOrReject(loanEventId: number): Promise<LoanEvent> {

@@ -18,3 +18,7 @@ export interface ReturnLoanInput {
 export interface PendingLoanInput {
   loanId: number;
 }
+
+export interface ActiveLoanInput {
+  loanId: number;
+}
