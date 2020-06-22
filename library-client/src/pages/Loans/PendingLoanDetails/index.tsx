@@ -2,6 +2,8 @@ import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React, { useState } from 'react';
 import { Button } from 'shared/components/Button';
+import { EmptyState } from 'shared/components/EmptyState';
+import { Loading } from 'shared/components/Loading';
 import { Modal } from 'shared/components/Modal';
 import { dateFormatter } from 'shared/helpers';
 import {
@@ -88,8 +90,16 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
     },
   });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <div>{`Error! ${error}`}</div>;
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <EmptyState
+        title="Failed to load the loan details"
+        message="Some error occured while loading the loan details. Please try again."
+        icon="loan"
+      />
+    );
+  }
 
   function onApproveLoanClick() {
     approveLoan({

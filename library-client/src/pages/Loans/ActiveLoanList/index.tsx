@@ -3,7 +3,9 @@ import { gql } from 'apollo-boost';
 import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { Avatar } from 'shared/components/Avatar';
+import { EmptyState } from 'shared/components/EmptyState';
 import { BookIcon } from 'shared/components/Icon';
+import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
 import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
 
@@ -46,8 +48,20 @@ export function ActiveLoanList({ onSelectLoan = () => {} }: ActiveLoanListProps)
     }
   }, [match.isExact, refetch]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <EmptyState
+        title="Failed to load the active loans"
+        message="Some error occured while loading the active loans. Please try again."
+        icon="loan"
+      />
+    );
+  }
+
+  if (data.activeLoans.length === 0) {
+    return <EmptyState title="No active loans" message="There are currenly no active loans." icon="loan" />;
+  }
 
   return (
     <LoanListWrapper>

@@ -1,7 +1,9 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { EmptyState } from 'shared/components/EmptyState';
 import { BookIcon } from 'shared/components/Icon';
+import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
 import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
 import { LoanStatusIcon, RejectReason } from './styled';
@@ -33,8 +35,26 @@ export function MyLoans() {
     fetchPolicy: 'no-cache',
   });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <EmptyState
+        title="Failed to load the your loans"
+        message="Some error occured while loading your loans. Please try again."
+        icon="loan"
+      />
+    );
+  }
+
+  if (data.myLoans.length === 0) {
+    return (
+      <EmptyState
+        title="You haven't loaned anything"
+        message="Go to the home page and browse available library items."
+        icon="loan"
+      />
+    );
+  }
 
   return (
     <LoanListWrapper>

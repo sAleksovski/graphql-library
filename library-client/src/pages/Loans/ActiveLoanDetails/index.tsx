@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
 import {
   Author,
@@ -17,6 +18,7 @@ import {
   StyledButton,
   UserLoanHistory,
 } from '../common';
+import { EmptyState } from 'shared/components/EmptyState';
 
 const GET_ACTIVE_LOAN_DETAILS = gql`
   query ActiveLoan($loanId: Int!) {
@@ -70,8 +72,16 @@ export function ActiveLoanDetails({ loanId, onLoanStateChanged = () => {} }: Act
     },
   });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <div>{`Error! ${error}`}</div>;
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <EmptyState
+        title="Failed to load the loan details"
+        message="Some error occured while loading the loan details. Please try again."
+        icon="loan"
+      />
+    );
+  }
 
   function onReturnLoanClick() {
     returnLoan({

@@ -3,7 +3,9 @@ import { gql } from 'apollo-boost';
 import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { Avatar } from 'shared/components/Avatar';
+import { EmptyState } from 'shared/components/EmptyState';
 import { BookIcon } from 'shared/components/Icon';
+import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
 import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
 
@@ -46,8 +48,20 @@ export function PendingLoanList({ onSelectLoan = () => {} }: PendingLoanListProp
     }
   }, [match.isExact, refetch]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <EmptyState
+        title="Failed to load the pending loans"
+        message="Some error occured while loading the pending loans. Please try again."
+        icon="loan"
+      />
+    );
+  }
+
+  if (data.pendingLoans.length === 0) {
+    return <EmptyState title="No pending loans" message="There are currenly no pending loans." icon="loan" />;
+  }
 
   return (
     <LoanListWrapper>

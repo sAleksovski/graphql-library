@@ -5,6 +5,7 @@ import { Tab, Tabs } from 'shared/components/Tabs';
 import { BookDetails } from './BookDetails';
 import { BookList } from './BookList';
 import { HomePageWraper } from './styled';
+import { EmptyState } from 'shared/components/EmptyState';
 
 export function HomePage() {
   const match = useRouteMatch();
@@ -34,7 +35,13 @@ export function HomePage() {
             )}
           />
         </Route>
-        <Route path="/board-games">Not implemented.</Route>
+        <Route path="/board-games">
+          <EmptyState
+            title="Not implemented"
+            message="This functionality is not yet implemented. Coming soon..."
+            icon="board-game"
+          />
+        </Route>
       </Switch>
     </HomePageWraper>
   );

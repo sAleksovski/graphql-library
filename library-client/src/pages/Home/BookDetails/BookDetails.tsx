@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { Avatar } from 'shared/components/Avatar';
+import { Loading } from 'shared/components/Loading';
 import { dateTimeFormatter } from 'shared/utils/date-time.formatter';
 import { BookAddComment } from './BookAddComment';
 import { LoanButton } from './LoanButton';
@@ -23,6 +24,7 @@ import {
   StyledRating,
   Title,
 } from './styled';
+import { EmptyState } from 'shared/components/EmptyState';
 
 const GET_BOOK_DETAILS = gql`
   query Book($bookId: Int!) {
@@ -64,8 +66,16 @@ export function BookDetails({ bookId }: any) {
     variables: { bookId },
   });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <div>{`Error! ${error}`}</div>;
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <EmptyState
+        title="Failed to load book details"
+        message="Some error occured while loading the details. Please try again."
+        icon="book"
+      />
+    );
+  }
 
   return (
     <BookDetailsWrapper>

@@ -1,4 +1,8 @@
 export {
+  IoMdMap as BoardGameIcon,
+  IoMdSearch as SearchIcon,
+  IoMdClipboard as LoanIcon,
+  IoMdSad as UnknownErrorIcon,
   IoMdBook as BookIcon,
   IoMdCheckmarkCircleOutline as ApprovedIcon,
   IoMdClose as CloseIcon,
