@@ -5,6 +5,8 @@ import { BookCategory } from './database/book-category.entity';
 import { CategoryRepository } from './database/book-category.repository';
 import { Book } from './database/book.entity';
 import { BookRepository } from './database/book.repository';
+import { AuthenticatedUserContext } from 'modules/common';
+import { assertIsAdmin } from 'authentication/admin-guard';
 
 class BookService {
   private get bookRepository(): BookRepository {
@@ -23,16 +25,22 @@ class BookService {
     return this.bookRepository.findById(id);
   }
 
-  async createBook({ book }: CreateBookInput): Promise<Book> {
+  async createBook(ctx: AuthenticatedUserContext, { book }: CreateBookInput): Promise<Book> {
+    assertIsAdmin(ctx);
     return this.saveBook(book);
   }
 
-  async createBookByIsbn({ isbn }: CreateBookByIsbnInput): Promise<Book> {
+  async createBookByIsbn(ctx: AuthenticatedUserContext, { isbn }: CreateBookByIsbnInput): Promise<Book> {
+    assertIsAdmin(ctx);
     const resolveBookData: ResolvedBookData = await resolveBookDetails(isbn);
     return this.saveBook(resolveBookData);
   }
 
-  async createBooksByIsbns(createBooksByIsbnsInput: CreateBooksByIsbnsInput): Promise<Book[]> {
+  async createBooksByIsbns(
+    ctx: AuthenticatedUserContext,
+    createBooksByIsbnsInput: CreateBooksByIsbnsInput,
+  ): Promise<Book[]> {
+    assertIsAdmin(ctx);
     const bookDetails = await Promise.all(
       createBooksByIsbnsInput.isbnList.map((isbn: string) => resolveBookDetails(isbn)),
     );

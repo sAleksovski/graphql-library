@@ -1,5 +1,6 @@
 import { ApolloError } from 'apollo-server';
-import { LibraryItem } from 'modules/common';
+import { assertIsAdmin } from 'authentication/admin-guard';
+import { AuthenticatedUserContext, LibraryItem } from 'modules/common';
 import { User } from 'modules/user';
 import { createQueryBuilder } from 'typeorm';
 import { LoanEvent } from './loan-event.entity';
@@ -32,26 +33,30 @@ class LoanService {
     return true;
   }
 
-  async approveLoan({ loanEventId }: ApproveLoanInput, userId: number): Promise<boolean> {
+  async approveLoan(ctx: AuthenticatedUserContext, { loanEventId }: ApproveLoanInput): Promise<boolean> {
+    assertIsAdmin(ctx);
+
     const loanEvent = await this.verifyCanApproveOrReject(loanEventId);
 
     const approvelLoanEvent = new LoanEvent();
     approvelLoanEvent.item = loanEvent.item;
     approvelLoanEvent.user = loanEvent.user;
-    approvelLoanEvent.admin = this.getUser(userId);
+    approvelLoanEvent.admin = this.getUser(ctx.userId);
     approvelLoanEvent.type = LoanEventType.LOAN_APPROVED;
     await approvelLoanEvent.save();
 
     return true;
   }
 
-  async rejectLoan({ loanEventId, reason }: RejectLoanInput, userId: number): Promise<boolean> {
+  async rejectLoan(ctx: AuthenticatedUserContext, { loanEventId, reason }: RejectLoanInput): Promise<boolean> {
+    assertIsAdmin(ctx);
+
     const loanEvent = await this.verifyCanApproveOrReject(loanEventId);
 
     const rejectLoanEvent = new LoanEvent();
     rejectLoanEvent.item = loanEvent.item;
     rejectLoanEvent.user = loanEvent.user;
-    rejectLoanEvent.admin = this.getUser(userId);
+    rejectLoanEvent.admin = this.getUser(ctx.userId);
     rejectLoanEvent.type = LoanEventType.LOAN_REJECTED;
     rejectLoanEvent.reason = reason;
     await rejectLoanEvent.save();
@@ -59,7 +64,9 @@ class LoanService {
     return true;
   }
 
-  async returnLoan({ loanEventId }: ReturnLoanInput, userId: number): Promise<boolean> {
+  async returnLoan(ctx: AuthenticatedUserContext, { loanEventId }: ReturnLoanInput): Promise<boolean> {
+    assertIsAdmin(ctx);
+
     const approvedEvent = await LoanEvent.findOne(
       {
         id: loanEventId,
@@ -76,7 +83,7 @@ class LoanService {
     const loanEvent = new LoanEvent();
     loanEvent.item = approvedEvent.item;
     loanEvent.user = approvedEvent.user;
-    loanEvent.admin = this.getUser(userId);
+    loanEvent.admin = this.getUser(ctx.userId);
     loanEvent.type = LoanEventType.LOAN_FINISHED;
     await loanEvent.save();
     return true;
@@ -97,7 +104,9 @@ class LoanService {
     };
   }
 
-  async getPendingLoans(): Promise<PendingLoan[]> {
+  async getPendingLoans(ctx: AuthenticatedUserContext): Promise<PendingLoan[]> {
+    assertIsAdmin(ctx);
+
     const lastEventPerLibraryItem = await createQueryBuilder(LoanEvent, 'loanEvent')
       .distinctOn(['loanEvent.item.id'])
       .orderBy({
@@ -120,7 +129,9 @@ class LoanService {
     return pendingLoans;
   }
 
-  async getPendingLoan(loanId: number): Promise<PendingLoanInfo> {
+  async getPendingLoan(ctx: AuthenticatedUserContext, loanId: number): Promise<PendingLoanInfo> {
+    assertIsAdmin(ctx);
+
     const loanForEvent = await LoanEvent.findOne(
       { id: loanId, type: LoanEventType.LOAN_REQUESTED },
       {
@@ -150,7 +161,9 @@ class LoanService {
     };
   }
 
-  async getActiveLoans(): Promise<ActiveLoan[]> {
+  async getActiveLoans(ctx: AuthenticatedUserContext): Promise<ActiveLoan[]> {
+    assertIsAdmin(ctx);
+
     const lastEventPerLibraryItem = await createQueryBuilder(LoanEvent, 'loanEvent')
       .distinctOn(['loanEvent.item.id'])
       .orderBy({
@@ -173,7 +186,9 @@ class LoanService {
     return activeLoans;
   }
 
-  async getActiveLoan(loanId: number): Promise<ActiveLoanInfo> {
+  async getActiveLoan(ctx: AuthenticatedUserContext, loanId: number): Promise<ActiveLoanInfo> {
+    assertIsAdmin(ctx);
+
     const loanForEvent = await LoanEvent.findOne(
       { id: loanId, type: LoanEventType.LOAN_APPROVED },
       {

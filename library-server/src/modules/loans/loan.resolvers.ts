@@ -15,23 +15,23 @@ import { ActiveLoan, ActiveLoanInfo, MyLoan, PendingLoan, PendingLoanInfo } from
 
 export const resolvers: IResolvers = {
   Query: {
-    pendingLoans: (): Promise<PendingLoan[]> => loanService.getPendingLoans(),
-    pendingLoan: (_, pendingLoanInput: PendingLoanInput): Promise<PendingLoanInfo> =>
-      loanService.getPendingLoan(pendingLoanInput.loanId),
-    activeLoans: (): Promise<ActiveLoan[]> => loanService.getActiveLoans(),
-    activeLoan: (_, activeLoanInput: ActiveLoanInput): Promise<ActiveLoanInfo> =>
-      loanService.getActiveLoan(activeLoanInput.loanId),
+    pendingLoans: (_, __, ctx: AuthenticatedUserContext): Promise<PendingLoan[]> => loanService.getPendingLoans(ctx),
+    pendingLoan: (_, pendingLoanInput: PendingLoanInput, ctx: AuthenticatedUserContext): Promise<PendingLoanInfo> =>
+      loanService.getPendingLoan(ctx, pendingLoanInput.loanId),
+    activeLoans: (_, __, ctx: AuthenticatedUserContext): Promise<ActiveLoan[]> => loanService.getActiveLoans(ctx),
+    activeLoan: (_, activeLoanInput: ActiveLoanInput, ctx: AuthenticatedUserContext): Promise<ActiveLoanInfo> =>
+      loanService.getActiveLoan(ctx, activeLoanInput.loanId),
     myLoans: (_, __, ctx: AuthenticatedUserContext): Promise<MyLoan[]> => loanService.getMyLoans(ctx.userId),
   },
   Mutation: {
     requestLoan: (_, requestLoanInput: RequestLoanInput, ctx: AuthenticatedUserContext): Promise<boolean> =>
       loanService.requestLoan(requestLoanInput.itemId, ctx.userId),
     approveLoan: (_, approveLoanInput: ApproveLoanInput, ctx: AuthenticatedUserContext): Promise<boolean> =>
-      loanService.approveLoan(approveLoanInput, ctx.userId),
+      loanService.approveLoan(ctx, approveLoanInput),
     rejectLoan: (_, rejectLoanInput: RejectLoanInput, ctx: AuthenticatedUserContext): Promise<boolean> =>
-      loanService.rejectLoan(rejectLoanInput, ctx.userId),
+      loanService.rejectLoan(ctx, rejectLoanInput),
     returnLoan: (_, returnLoanInput: ReturnLoanInput, ctx: AuthenticatedUserContext): Promise<boolean> =>
-      loanService.returnLoan(returnLoanInput, ctx.userId),
+      loanService.returnLoan(ctx, returnLoanInput),
   },
   LibraryItem: {
     __resolveType(entity: Book | BoardGame): string {

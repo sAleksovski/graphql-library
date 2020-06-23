@@ -11,11 +11,15 @@ export const resolvers: IResolvers = {
     book: (_, idInput: IdInput): Promise<Book> => bookService.getBookById(idInput),
   },
   Mutation: {
-    createBook: (_, createBookInput: CreateBookInput): Promise<Book> => bookService.createBook(createBookInput),
-    createBookByIsbn: (_, createBookByIsbnInput: CreateBookByIsbnInput): Promise<Book> =>
-      bookService.createBookByIsbn(createBookByIsbnInput),
-    createBooksByIsbns: (_, createBooksByIsbnsInput: CreateBooksByIsbnsInput): Promise<Book[]> =>
-      bookService.createBooksByIsbns(createBooksByIsbnsInput),
+    createBook: (_, createBookInput: CreateBookInput, ctx: AuthenticatedUserContext): Promise<Book> =>
+      bookService.createBook(ctx, createBookInput),
+    createBookByIsbn: (_, createBookByIsbnInput: CreateBookByIsbnInput, ctx: AuthenticatedUserContext): Promise<Book> =>
+      bookService.createBookByIsbn(ctx, createBookByIsbnInput),
+    createBooksByIsbns: (
+      _,
+      createBooksByIsbnsInput: CreateBooksByIsbnsInput,
+      ctx: AuthenticatedUserContext,
+    ): Promise<Book[]> => bookService.createBooksByIsbns(ctx, createBooksByIsbnsInput),
   },
   Book: {
     loanInfo: (book: Book, _, ctx: AuthenticatedUserContext): Promise<LoanInfo> =>
