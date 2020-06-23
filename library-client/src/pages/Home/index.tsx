@@ -1,14 +1,14 @@
 import React from 'react';
-import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { Modal } from 'shared/components/Modal';
 import { Tab, Tabs } from 'shared/components/Tabs';
+import { BoardGameDetails } from './BoardGameDetails';
+import { BoardGameList } from './BoardGameList';
 import { BookDetails } from './BookDetails';
 import { BookList } from './BookList';
 import { HomePageWraper } from './styled';
-import { EmptyState } from 'shared/components/EmptyState';
 
 export function HomePage() {
-  const match = useRouteMatch();
   const history = useHistory();
 
   return (
@@ -29,17 +29,25 @@ export function HomePage() {
                 isOpen
                 width={1040}
                 withCloseIcon={true}
-                onClose={() => history.push(match.url)}
+                onClose={() => history.push('/books')}
                 renderContent={() => <BookDetails bookId={+routeProps.match.params.bookId} />}
               />
             )}
           />
         </Route>
         <Route path="/board-games">
-          <EmptyState
-            title="Not implemented"
-            message="This functionality is not yet implemented. Coming soon..."
-            icon="board-game"
+          <BoardGameList onSelectBoardGame={(id: number) => history.push(`/board-games/${id}`)} />
+          <Route
+            path={`/board-games/:boardGameId`}
+            render={(routeProps) => (
+              <Modal
+                isOpen
+                width={1040}
+                withCloseIcon={true}
+                onClose={() => history.push('/board-games')}
+                renderContent={() => <BoardGameDetails boardGameId={+routeProps.match.params.boardGameId} />}
+              />
+            )}
           />
         </Route>
       </Switch>
