@@ -5,7 +5,20 @@ export const typeDefs: DocumentNode = gql`
   type BoardGame {
     id: Int!
     title: String
-    boardGameGeekUrl: String
+    description: String
+    smallThumbnail: String
+    thumbnail: String
+    publisher: String
+    publishedDate: String
+    averageRating: Float
+    ratingsCount: Float
+    minPlayers: Int
+    maxPlayers: Int
+    minPlayTime: Int
+    maxPlayTime: Int
+    boardGameAtlasUrl: String
+    officialUrl: String
+    rulesUrl: String
     comments: [Comment]
     loanInfo: LoanInfo
   }
@@ -13,5 +26,9 @@ export const typeDefs: DocumentNode = gql`
   extend type Query {
     boardGames: [BoardGame]
     boardGame(id: Int!): BoardGame
+  }
+
+  extend type Mutation {
+    createBookByBoardGameAtlasId(boardGameAtlasId: String!): BoardGame
   }
 `;

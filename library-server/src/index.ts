@@ -1,4 +1,7 @@
 import 'module-alias/register';
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { ApolloServer } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import { API_PREFIX, IS_PRODUCTION, PORT } from 'config';

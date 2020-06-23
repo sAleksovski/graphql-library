@@ -1,14 +1,21 @@
 import { IResolvers } from 'apollo-server';
 import { AuthenticatedUserContext } from 'modules/common';
 import { LoanInfo, loanService } from 'modules/loans';
-import { boardGames } from './board-game.data';
 import { BoardGame } from './board-game.entity';
-import { BoardGame as BoardGameType } from './board-game.types';
+import { CreateBoardGameByBoardGameAtlasIdInput, IdInput } from './board-game.inputs';
+import { boardGameService } from './board-game.service';
 
 export const resolvers: IResolvers = {
   Query: {
-    boardGames: (): BoardGameType[] => boardGames,
-    boardGame: (_, { id }: { id: number }): BoardGameType | undefined => boardGames.find((b) => b.id === id),
+    boardGames: (): Promise<BoardGame[]> => boardGameService.getBoardGames(),
+    boardGame: (_, idInput: IdInput): Promise<BoardGame> => boardGameService.getBoardGameById(idInput),
+  },
+  Mutation: {
+    createBookByBoardGameAtlasId: (
+      _,
+      createBookByIsbnInput: CreateBoardGameByBoardGameAtlasIdInput,
+      ctx: AuthenticatedUserContext,
+    ): Promise<BoardGame> => boardGameService.createBoardGameByBoardGameAtlasId(ctx, createBookByIsbnInput),
   },
   BoardGame: {
     loanInfo: (boardGame: BoardGame, _, ctx: AuthenticatedUserContext): Promise<LoanInfo> =>

@@ -7,8 +7,23 @@ export class BoardGame extends LibraryItem {
   id: number;
 
   @Column()
-  title: string;
+  minPlayers: number;
 
   @Column()
-  boardGameGeekUrl: string;
+  maxPlayers: number;
+
+  @Column()
+  minPlayTime: number;
+
+  @Column()
+  maxPlayTime: number;
+
+  @Column()
+  boardGameAtlasUrl: string;
+
+  @Column()
+  officialUrl: string;
+
+  @Column()
+  rulesUrl: string;
 }

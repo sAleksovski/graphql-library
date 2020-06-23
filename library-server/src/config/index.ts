@@ -16,3 +16,4 @@ export const PORT = process.env.PORT || 4000;
 export const DATABASE_URL =
   process.env.DATABASE_URL ||
   `postgres://${DEV_DB_USERNAME}:${DEV_DB_PASSWORD}@${DEV_DB_HOST}:${DEV_DB_PORT}/${DEV_DB_DATABASE}`;
+export const BOARD_GAME_ATLAS_CLIENT_ID = process.env.BOARD_GAME_ATLAS_CLIENT_ID;
