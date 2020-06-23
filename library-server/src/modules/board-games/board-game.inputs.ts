@@ -5,3 +5,7 @@ export interface IdInput {
 export interface CreateBoardGameByBoardGameAtlasIdInput {
   boardGameAtlasId: string;
 }
+
+export interface FindBoardGameFromBoardGameAtlasInput {
+  title: string;
+}

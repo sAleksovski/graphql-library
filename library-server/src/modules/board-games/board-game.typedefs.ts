@@ -24,12 +24,32 @@ export const typeDefs: DocumentNode = gql`
     type: String
   }
 
+  type BoardGameFromBoardGameAtlas {
+    id: String
+    title: String
+    description: String
+    smallThumbnail: String
+    thumbnail: String
+    publisher: String
+    publishedDate: String
+    averageRating: Float
+    ratingsCount: Int
+    minPlayers: Int
+    maxPlayers: Int
+    minPlayTime: Int
+    maxPlayTime: Int
+    boardGameAtlasUrl: String
+    officialUrl: String
+    rulesUrl: String
+  }
+
   extend type Query {
     boardGames: [BoardGame]
     boardGame(id: Int!): BoardGame
+    findBoardGameFromBoardGameAtlas(title: String!): [BoardGameFromBoardGameAtlas]
   }
 
   extend type Mutation {
-    createBookByBoardGameAtlasId(boardGameAtlasId: String!): BoardGame
+    createBoardGameByBoardGameAtlasId(boardGameAtlasId: String!): BoardGame
   }
 `;

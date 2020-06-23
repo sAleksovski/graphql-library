@@ -1,10 +1,14 @@
 import { assertIsAdmin } from 'authentication/admin-guard';
 import { AuthenticatedUserContext } from 'modules/common';
 import { getCustomRepository } from 'typeorm';
-import { resolveBoardGameDetails } from './board-game-data-resolver';
+import { findBoardGamesByTitle, resolveBoardGameDetails } from './board-game-data-resolver';
 import { ResolvedBoardGameData } from './board-game-data-resolver/board-game-atlas.types';
 import { BoardGame } from './board-game.entity';
-import { CreateBoardGameByBoardGameAtlasIdInput, IdInput } from './board-game.inputs';
+import {
+  CreateBoardGameByBoardGameAtlasIdInput,
+  FindBoardGameFromBoardGameAtlasInput,
+  IdInput,
+} from './board-game.inputs';
 import { BoardGameRepository } from './board-game.repository';
 
 class BoardGameService {
@@ -22,12 +26,23 @@ class BoardGameService {
 
   async createBoardGameByBoardGameAtlasId(
     ctx: AuthenticatedUserContext,
-    createBookByIsbnInput: CreateBoardGameByBoardGameAtlasIdInput,
+    createBoardGameByBoardGameAtlasIdInput: CreateBoardGameByBoardGameAtlasIdInput,
   ): Promise<BoardGame> {
     assertIsAdmin(ctx);
 
-    const resolvedBoardGameDetails = await resolveBoardGameDetails(createBookByIsbnInput.boardGameAtlasId);
+    const resolvedBoardGameDetails = await resolveBoardGameDetails(
+      createBoardGameByBoardGameAtlasIdInput.boardGameAtlasId,
+    );
     return this.saveBoardGame(resolvedBoardGameDetails);
+  }
+
+  async findBoardGameFromBoardGameAtlas(
+    ctx: AuthenticatedUserContext,
+    { title }: FindBoardGameFromBoardGameAtlasInput,
+  ): Promise<ResolvedBoardGameData[]> {
+    assertIsAdmin(ctx);
+
+    return findBoardGamesByTitle(title);
   }
 
   private async saveBoardGame(boardGameData: ResolvedBoardGameData): Promise<BoardGame> {

@@ -1,4 +1,5 @@
 export interface ResolvedBoardGameData {
+  id: string;
   title: string;
   description: string;
   smallThumbnail: string;
