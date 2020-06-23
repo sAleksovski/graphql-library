@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { EmptyState } from 'shared/components/EmptyState';
-import { BookIcon } from 'shared/components/Icon';
+import { BoardGameIcon, BookIcon } from 'shared/components/Icon';
 import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
 import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
@@ -20,10 +20,11 @@ const GET_MY_LOANS = gql`
       item {
         ... on Book {
           title
-          author
+          type
         }
         ... on BoardGame {
           title
+          type
         }
       }
     }
@@ -60,7 +61,8 @@ export function MyLoans() {
     <LoanListWrapper>
       {data.myLoans.map((item: any, index: number) => (
         <LoanListItem first={index === 0} last={index === data.myLoans.length - 1} key={item.id}>
-          <BookIcon size={24} />
+          {item.item.type === 'BOOK' && <BookIcon size={24} />}
+          {item.item.type === 'BOARD_GAME' && <BoardGameIcon size={24} />}
           <LoanInfo>
             <Title>{item.item.title}</Title>
             {item.status === 'LOAN_REQUESTED' && (

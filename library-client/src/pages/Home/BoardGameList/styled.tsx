@@ -1,4 +1,3 @@
-import { PlayersIcon, PlayingTimeIcon } from 'shared/components/Icon';
 import styled from 'styled-components';
 
 export const BoardGameListWrapper = styled.div`
@@ -67,18 +66,4 @@ export const ExternalInfoLink = styled.a`
   margin-right: 0.5rem;
   text-decoration: none;
   color: #0079c9;
-`;
-
-export const BoardGameIconInfo = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.25rem;
-`;
-
-export const StyledPlayingTimeIcon = styled(PlayingTimeIcon)`
-  margin-right: 0.5rem;
-`;
-
-export const StyledPlayersIcon = styled(PlayersIcon)`
-  margin-right: 0.5rem;
 `;

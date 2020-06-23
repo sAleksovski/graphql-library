@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { EmptyState } from 'shared/components/EmptyState';
 import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
 import {
@@ -18,7 +19,6 @@ import {
   StyledButton,
   UserLoanHistory,
 } from '../common';
-import { EmptyState } from 'shared/components/EmptyState';
 
 const GET_ACTIVE_LOAN_DETAILS = gql`
   query ActiveLoan($loanId: Int!) {
@@ -32,6 +32,13 @@ const GET_ACTIVE_LOAN_DETAILS = gql`
           title
           thumbnail
           author
+          publisher
+          description
+        }
+        ... on BoardGame {
+          title
+          thumbnail
+          publisher
           description
         }
       }
@@ -40,6 +47,9 @@ const GET_ACTIVE_LOAN_DETAILS = gql`
         loanEnd
         item {
           ... on Book {
+            title
+          }
+          ... on BoardGame {
             title
           }
         }
@@ -103,8 +113,8 @@ export function ActiveLoanDetails({ loanId, onLoanStateChanged = () => {} }: Act
       </Left>
       <Right>
         <DetailsTitle>{data.activeLoan.item.title}</DetailsTitle>
-        <Author>{data.activeLoan.item.author}</Author>
-        <Description>{data.activeLoan.item.description}</Description>
+        <Author>{data.activeLoan.item.author || data.activeLoan.item.publisher}</Author>
+        <Description dangerouslySetInnerHTML={{ __html: data.activeLoan.item.description }}></Description>
 
         <UserLoanHistory>User loan history:</UserLoanHistory>
         {data.activeLoan.userLoanHistory.map((userLoanHistory: any) => (

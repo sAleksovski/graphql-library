@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { Avatar } from 'shared/components/Avatar';
 import { EmptyState } from 'shared/components/EmptyState';
-import { BookIcon } from 'shared/components/Icon';
+import { BoardGameIcon, BookIcon } from 'shared/components/Icon';
 import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
 import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
@@ -21,10 +21,11 @@ const GET_PENDING_LOANS = gql`
       item {
         ... on Book {
           title
-          author
+          type
         }
         ... on BoardGame {
           title
+          type
         }
       }
     }
@@ -77,7 +78,8 @@ export function PendingLoanList({ onSelectLoan = () => {} }: PendingLoanListProp
             <Title>{item.item.title}</Title>
             <LoanDate>{dateFormatter.format(new Date(item.requestedAt))}</LoanDate>
           </LoanInfo>
-          <BookIcon size={24} />
+          {item.item.type === 'BOOK' && <BookIcon size={24} />}
+          {item.item.type === 'BOARD_GAME' && <BoardGameIcon size={24} />}
         </LoanListItem>
       ))}
     </LoanListWrapper>

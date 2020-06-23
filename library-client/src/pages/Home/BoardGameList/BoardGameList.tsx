@@ -5,17 +5,15 @@ import { EmptyState } from 'shared/components/EmptyState';
 import { Loading } from 'shared/components/Loading';
 import { Rating } from 'shared/components/Rating';
 import { dateFormatter } from 'shared/helpers';
+import { BoardGameIconInfo, StyledPlayersIcon, StyledPlayingTimeIcon } from '../common/styled';
 import { BoardGame } from './board-game.type';
 import {
-  BoardGameIconInfo,
   BoardGameListInfo,
   BoardGameListItem,
   BoardGameListWrapper,
   ExternalInfoLink,
   Image,
   PublisherInfo,
-  StyledPlayersIcon,
-  StyledPlayingTimeIcon,
   Title,
 } from './styled';
 
@@ -98,7 +96,7 @@ export function BoardGameList({ onSelectBoardGame }: BoardGameListProps) {
                 <StyledPlayingTimeIcon size={20} /> {minPlayTime}min → {maxPlayTime}min
               </BoardGameIconInfo>
               <BoardGameIconInfo>
-                <StyledPlayersIcon size={20} /> {minPlayers} → {maxPlayers}
+                <StyledPlayersIcon size={20} /> {minPlayers} → {maxPlayers} players
               </BoardGameIconInfo>
               <ExternalInfoLink
                 onClick={(event) => event.stopPropagation()}

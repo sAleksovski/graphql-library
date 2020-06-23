@@ -19,7 +19,7 @@ const ADD_COMMENT = gql`
   }
 `;
 
-interface BookAddCommentProps {
+interface AddCommentProps {
   queryWithVariables: {
     query: DocumentNode;
     variables: { [key: string]: string | number };
@@ -28,7 +28,7 @@ interface BookAddCommentProps {
   itemId: number;
 }
 
-export function BookAddComment({ queryWithVariables, propertyKey, itemId }: BookAddCommentProps) {
+export function AddComment({ queryWithVariables, propertyKey, itemId }: AddCommentProps) {
   const [addComment] = useMutation(ADD_COMMENT, {
     update(cache, { data: { createComment } }) {
       const cachedQuery = cache.readQuery<{ [key: string]: any }>(queryWithVariables) || {};

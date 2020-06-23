@@ -2,13 +2,12 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { Avatar } from 'shared/components/Avatar';
+import { EmptyState } from 'shared/components/EmptyState';
 import { Loading } from 'shared/components/Loading';
 import { dateTimeFormatter } from 'shared/utils/date-time.formatter';
-import { BookAddComment } from './BookAddComment';
-import { LoanButton } from './LoanButton';
+import { AddComment } from '../common/AddComment';
+import { LoanButton } from '../common/LoanButton';
 import {
-  Author,
-  BookDetailsWrapper,
   Comment,
   CommentContent,
   CommentDate,
@@ -16,6 +15,10 @@ import {
   CommentMain,
   CommentSection,
   CommentUser,
+} from '../common/styled';
+import {
+  Author,
+  BookDetailsWrapper,
   Description,
   Image,
   Left,
@@ -24,7 +27,6 @@ import {
   StyledRating,
   Title,
 } from './styled';
-import { EmptyState } from 'shared/components/EmptyState';
 
 const GET_BOOK_DETAILS = gql`
   query Book($bookId: Int!) {
@@ -100,7 +102,7 @@ export function BookDetails({ bookId }: any) {
         <Description>{data.book.description}</Description>
 
         <CommentSection>
-          {data.book.comments.map((comment: any, index: number) => (
+          {data.book.comments.map((comment: any) => (
             <Comment key={comment.id}>
               <CommentLeft>
                 <Avatar avatarUrl={comment.user.avatarUrl} name={comment.user.name}></Avatar>
@@ -113,7 +115,7 @@ export function BookDetails({ bookId }: any) {
             </Comment>
           ))}
 
-          <BookAddComment
+          <AddComment
             itemId={bookId}
             propertyKey="book"
             queryWithVariables={{

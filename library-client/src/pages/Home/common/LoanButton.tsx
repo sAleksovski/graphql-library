@@ -59,7 +59,7 @@ export function LoanButton({
 
   return (
     <Button block disabled={!canLoan} onClick={onButtonClick}>
-      {canLoan && 'Loan book'}
+      {canLoan && 'Loan item'}
       {hasPendingLoan && 'Pending approval'}
       {loanedToUser && 'You have this'}
       {!canLoan && !hasPendingLoan && !loanedToUser && 'Unavailable'}

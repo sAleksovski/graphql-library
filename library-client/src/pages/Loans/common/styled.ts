@@ -65,6 +65,7 @@ export const BookDetailsWrapper = styled.div`
 `;
 
 export const Image = styled.img`
+  max-width: 220px;
   height: 300px;
   margin-bottom: 0.5rem;
 `;

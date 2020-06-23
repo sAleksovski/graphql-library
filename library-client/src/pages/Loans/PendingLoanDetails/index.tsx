@@ -35,6 +35,13 @@ const GET_PENDING_LOAN_DETAILS = gql`
           title
           thumbnail
           author
+          publisher
+          description
+        }
+        ... on BoardGame {
+          title
+          thumbnail
+          publisher
           description
         }
       }
@@ -43,6 +50,9 @@ const GET_PENDING_LOAN_DETAILS = gql`
         loanEnd
         item {
           ... on Book {
+            title
+          }
+          ... on BoardGame {
             title
           }
         }
@@ -152,8 +162,8 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
       </Left>
       <Right>
         <DetailsTitle>{data.pendingLoan.item.title}</DetailsTitle>
-        <Author>{data.pendingLoan.item.author}</Author>
-        <Description>{data.pendingLoan.item.description}</Description>
+        <Author>{data.pendingLoan.item.author || data.pendingLoan.item.publisher}</Author>
+        <Description dangerouslySetInnerHTML={{ __html: data.pendingLoan.item.description }}></Description>
 
         <UserLoanHistory>User loan history:</UserLoanHistory>
         {data.pendingLoan.userLoanHistory.map((userLoanHistory: any) => (

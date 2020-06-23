@@ -21,6 +21,7 @@ export const typeDefs: DocumentNode = gql`
     rulesUrl: String
     comments: [Comment]
     loanInfo: LoanInfo
+    type: String
   }
 
   extend type Query {
