@@ -3,7 +3,11 @@ import { DocumentNode, gql } from 'apollo-boost';
 import { UserAvatar } from 'pages/common/UserAvatar';
 import React, { useState } from 'react';
 import { Input } from 'shared/components/Form';
-import { Comment, CommentLeft, CommentMain } from './styled';
+import {
+  LibraryItemDetailsComment,
+  LibraryItemDetailsCommentLeft,
+  LibraryItemDetailsCommentMain,
+} from 'shared/components/Library';
 
 const ADD_COMMENT = gql`
   mutation AddComment($comment: CreateCommentInput!) {
@@ -61,13 +65,13 @@ export function AddComment({ queryWithVariables, propertyKey, itemId }: AddComme
   }
 
   return (
-    <Comment>
-      <CommentLeft>
+    <LibraryItemDetailsComment>
+      <LibraryItemDetailsCommentLeft>
         <UserAvatar />
-      </CommentLeft>
-      <CommentMain hideBorder={true}>
+      </LibraryItemDetailsCommentLeft>
+      <LibraryItemDetailsCommentMain hideBorder={true}>
         <Input type="text" value={comment} onChange={(e) => setComment(e.target.value)} onKeyPress={keyPress} />
-      </CommentMain>
-    </Comment>
+      </LibraryItemDetailsCommentMain>
+    </LibraryItemDetailsComment>
   );
 }

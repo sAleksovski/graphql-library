@@ -3,23 +3,30 @@ import { gql } from 'apollo-boost';
 import React from 'react';
 import { Avatar } from 'shared/components/Avatar';
 import { EmptyState } from 'shared/components/EmptyState';
+import { PlayersIcon, PlayingTimeIcon } from 'shared/components/Icon';
+import {
+  LibraryItemDetails,
+  LibraryItemDetailsComment,
+  LibraryItemDetailsCommentContent,
+  LibraryItemDetailsCommentDate,
+  LibraryItemDetailsCommentLeft,
+  LibraryItemDetailsCommentMain,
+  LibraryItemDetailsCommentSection,
+  LibraryItemDetailsCommentUser,
+  LibraryItemDetailsDescription,
+  LibraryItemDetailsIconSubtitle,
+  LibraryItemDetailsIconWrapper,
+  LibraryItemDetailsImage,
+  LibraryItemDetailsLeft,
+  LibraryItemDetailsLeftContent,
+  LibraryItemDetailsRight,
+  LibraryItemDetailsStyledRating,
+  LibraryItemDetailsTitle,
+} from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { dateTimeFormatter } from 'shared/utils/date-time.formatter';
 import { AddComment } from '../common/AddComment';
 import { LoanButton } from '../common/LoanButton';
-import {
-  Comment,
-  CommentContent,
-  CommentDate,
-  CommentLeft,
-  CommentMain,
-  CommentSection,
-  CommentUser,
-  BoardGameIconInfo,
-  StyledPlayingTimeIcon,
-  StyledPlayersIcon,
-} from '../common/styled';
-import { BookDetailsWrapper, Description, Image, Left, LeftContent, Right, StyledRating, Title } from './styled';
 
 const GET_BOARD_GAME_DETAILS = gql`
   query BoardGame($boardGameId: Int!) {
@@ -83,11 +90,11 @@ export function BoardGameDetails({ boardGameId }: BoardGameDetailsProps) {
   }
 
   return (
-    <BookDetailsWrapper>
-      <Left>
-        <LeftContent>
-          <Image src={data.boardGame.thumbnail} alt={`Cover for ${data.boardGame.title}`} />
-          <StyledRating rating={data.boardGame.averageRating} />
+    <LibraryItemDetails>
+      <LibraryItemDetailsLeft>
+        <LibraryItemDetailsLeftContent>
+          <LibraryItemDetailsImage src={data.boardGame.thumbnail} alt={`Cover for ${data.boardGame.title}`} />
+          <LibraryItemDetailsStyledRating rating={data.boardGame.averageRating} />
           <LoanButton
             itemId={boardGameId}
             propertyKey="boardGame"
@@ -97,30 +104,39 @@ export function BoardGameDetails({ boardGameId }: BoardGameDetailsProps) {
             }}
             loanInfo={data.boardGame.loanInfo}
           />
-        </LeftContent>
-      </Left>
-      <Right>
-        <Title>{data.boardGame.title}</Title>
-        <BoardGameIconInfo>
-          <StyledPlayingTimeIcon size={20} /> {data.boardGame.minPlayTime}min → {data.boardGame.maxPlayTime}min
-        </BoardGameIconInfo>
-        <BoardGameIconInfo>
-          <StyledPlayersIcon size={20} /> {data.boardGame.minPlayers} → {data.boardGame.maxPlayers} players
-        </BoardGameIconInfo>
-        <Description dangerouslySetInnerHTML={{ __html: data.boardGame.description }}></Description>
+        </LibraryItemDetailsLeftContent>
+      </LibraryItemDetailsLeft>
 
-        <CommentSection>
+      <LibraryItemDetailsRight>
+        <LibraryItemDetailsTitle>{data.boardGame.title}</LibraryItemDetailsTitle>
+        <LibraryItemDetailsIconSubtitle>
+          <LibraryItemDetailsIconWrapper>
+            <PlayingTimeIcon size={20} />
+          </LibraryItemDetailsIconWrapper>
+          {data.boardGame.minPlayTime}min → {data.boardGame.maxPlayTime}min
+        </LibraryItemDetailsIconSubtitle>
+        <LibraryItemDetailsIconSubtitle>
+          <LibraryItemDetailsIconWrapper>
+            <PlayersIcon size={20} />
+          </LibraryItemDetailsIconWrapper>
+          {data.boardGame.minPlayers} → {data.boardGame.maxPlayers} players
+        </LibraryItemDetailsIconSubtitle>
+        <LibraryItemDetailsDescription dangerouslySetInnerHTML={{ __html: data.boardGame.description }} />
+
+        <LibraryItemDetailsCommentSection>
           {data.boardGame.comments.map((comment: any) => (
-            <Comment key={comment.id}>
-              <CommentLeft>
+            <LibraryItemDetailsComment key={comment.id}>
+              <LibraryItemDetailsCommentLeft>
                 <Avatar avatarUrl={comment.user.avatarUrl} name={comment.user.name}></Avatar>
-              </CommentLeft>
-              <CommentMain>
-                <CommentUser>{comment.user.name}</CommentUser>
-                <CommentContent>{comment.content}</CommentContent>
-                <CommentDate>{dateTimeFormatter.format(new Date(comment.createdAt))}</CommentDate>
-              </CommentMain>
-            </Comment>
+              </LibraryItemDetailsCommentLeft>
+              <LibraryItemDetailsCommentMain>
+                <LibraryItemDetailsCommentUser>{comment.user.name}</LibraryItemDetailsCommentUser>
+                <LibraryItemDetailsCommentContent>{comment.content}</LibraryItemDetailsCommentContent>
+                <LibraryItemDetailsCommentDate>
+                  {dateTimeFormatter.format(new Date(comment.createdAt))}
+                </LibraryItemDetailsCommentDate>
+              </LibraryItemDetailsCommentMain>
+            </LibraryItemDetailsComment>
           ))}
 
           <AddComment
@@ -131,8 +147,8 @@ export function BoardGameDetails({ boardGameId }: BoardGameDetailsProps) {
               variables: { boardGameId },
             }}
           />
-        </CommentSection>
-      </Right>
-    </BookDetailsWrapper>
+        </LibraryItemDetailsCommentSection>
+      </LibraryItemDetailsRight>
+    </LibraryItemDetails>
   );
 }

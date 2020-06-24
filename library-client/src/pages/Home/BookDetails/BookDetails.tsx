@@ -3,30 +3,28 @@ import { gql } from 'apollo-boost';
 import React from 'react';
 import { Avatar } from 'shared/components/Avatar';
 import { EmptyState } from 'shared/components/EmptyState';
+import {
+  LibraryItemDetails,
+  LibraryItemDetailsComment,
+  LibraryItemDetailsCommentContent,
+  LibraryItemDetailsCommentDate,
+  LibraryItemDetailsCommentLeft,
+  LibraryItemDetailsCommentMain,
+  LibraryItemDetailsCommentSection,
+  LibraryItemDetailsCommentUser,
+  LibraryItemDetailsDescription,
+  LibraryItemDetailsImage,
+  LibraryItemDetailsLeft,
+  LibraryItemDetailsLeftContent,
+  LibraryItemDetailsRight,
+  LibraryItemDetailsStyledRating,
+  LibraryItemDetailsSubtitle,
+  LibraryItemDetailsTitle,
+} from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { dateTimeFormatter } from 'shared/utils/date-time.formatter';
 import { AddComment } from '../common/AddComment';
 import { LoanButton } from '../common/LoanButton';
-import {
-  Comment,
-  CommentContent,
-  CommentDate,
-  CommentLeft,
-  CommentMain,
-  CommentSection,
-  CommentUser,
-} from '../common/styled';
-import {
-  Author,
-  BookDetailsWrapper,
-  Description,
-  Image,
-  Left,
-  LeftContent,
-  Right,
-  StyledRating,
-  Title,
-} from './styled';
 
 const GET_BOOK_DETAILS = gql`
   query Book($bookId: Int!) {
@@ -80,11 +78,11 @@ export function BookDetails({ bookId }: any) {
   }
 
   return (
-    <BookDetailsWrapper>
-      <Left>
-        <LeftContent>
-          <Image src={data.book.thumbnail} alt={`Cover for ${data.book.title}`} />
-          <StyledRating rating={data.book.averageRating} />
+    <LibraryItemDetails>
+      <LibraryItemDetailsLeft>
+        <LibraryItemDetailsLeftContent>
+          <LibraryItemDetailsImage src={data.book.thumbnail} alt={`Cover for ${data.book.title}`} />
+          <LibraryItemDetailsStyledRating rating={data.book.averageRating} />
           <LoanButton
             itemId={bookId}
             propertyKey="book"
@@ -94,25 +92,27 @@ export function BookDetails({ bookId }: any) {
             }}
             loanInfo={data.book.loanInfo}
           />
-        </LeftContent>
-      </Left>
-      <Right>
-        <Title>{data.book.title}</Title>
-        <Author>{data.book.author}</Author>
-        <Description>{data.book.description}</Description>
+        </LibraryItemDetailsLeftContent>
+      </LibraryItemDetailsLeft>
+      <LibraryItemDetailsRight>
+        <LibraryItemDetailsTitle>{data.book.title}</LibraryItemDetailsTitle>
+        <LibraryItemDetailsSubtitle>{data.book.author}</LibraryItemDetailsSubtitle>
+        <LibraryItemDetailsDescription>{data.book.description}</LibraryItemDetailsDescription>
 
-        <CommentSection>
+        <LibraryItemDetailsCommentSection>
           {data.book.comments.map((comment: any) => (
-            <Comment key={comment.id}>
-              <CommentLeft>
+            <LibraryItemDetailsComment key={comment.id}>
+              <LibraryItemDetailsCommentLeft>
                 <Avatar avatarUrl={comment.user.avatarUrl} name={comment.user.name}></Avatar>
-              </CommentLeft>
-              <CommentMain>
-                <CommentUser>{comment.user.name}</CommentUser>
-                <CommentContent>{comment.content}</CommentContent>
-                <CommentDate>{dateTimeFormatter.format(new Date(comment.createdAt))}</CommentDate>
-              </CommentMain>
-            </Comment>
+              </LibraryItemDetailsCommentLeft>
+              <LibraryItemDetailsCommentMain>
+                <LibraryItemDetailsCommentUser>{comment.user.name}</LibraryItemDetailsCommentUser>
+                <LibraryItemDetailsCommentContent>{comment.content}</LibraryItemDetailsCommentContent>
+                <LibraryItemDetailsCommentDate>
+                  {dateTimeFormatter.format(new Date(comment.createdAt))}
+                </LibraryItemDetailsCommentDate>
+              </LibraryItemDetailsCommentMain>
+            </LibraryItemDetailsComment>
           ))}
 
           <AddComment
@@ -123,8 +123,8 @@ export function BookDetails({ bookId }: any) {
               variables: { bookId },
             }}
           />
-        </CommentSection>
-      </Right>
-    </BookDetailsWrapper>
+        </LibraryItemDetailsCommentSection>
+      </LibraryItemDetailsRight>
+    </LibraryItemDetails>
   );
 }

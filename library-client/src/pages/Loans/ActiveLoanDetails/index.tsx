@@ -2,23 +2,19 @@ import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { EmptyState } from 'shared/components/EmptyState';
+import {
+  LibraryItemDetails,
+  LibraryItemDetailsDescription,
+  LibraryItemDetailsImage,
+  LibraryItemDetailsLeft,
+  LibraryItemDetailsLeftContent,
+  LibraryItemDetailsRight,
+  LibraryItemDetailsSubtitle,
+  LibraryItemDetailsTitle,
+} from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
-import {
-  Author,
-  BookDetailsWrapper,
-  Description,
-  DetailsTitle,
-  Image,
-  Left,
-  LeftContent,
-  LoanItem,
-  LoanItemDate,
-  LoanItemTitle,
-  Right,
-  StyledButton,
-  UserLoanHistory,
-} from '../common';
+import { LoanItem, LoanItemDate, LoanItemTitle, StyledButton, UserLoanHistory } from '../common';
 
 const GET_ACTIVE_LOAN_DETAILS = gql`
   query ActiveLoan($loanId: Int!) {
@@ -102,19 +98,26 @@ export function ActiveLoanDetails({ loanId, onLoanStateChanged = () => {} }: Act
   }
 
   return (
-    <BookDetailsWrapper>
-      <Left>
-        <LeftContent>
-          <Image src={data.activeLoan.item.thumbnail} alt={`Cover for ${data.activeLoan.item.title}`} />
+    <LibraryItemDetails>
+      <LibraryItemDetailsLeft>
+        <LibraryItemDetailsLeftContent>
+          <LibraryItemDetailsImage
+            src={data.activeLoan.item.thumbnail}
+            alt={`Cover for ${data.activeLoan.item.title}`}
+          />
           <StyledButton block color="success" onClick={onReturnLoanClick}>
             Return
           </StyledButton>
-        </LeftContent>
-      </Left>
-      <Right>
-        <DetailsTitle>{data.activeLoan.item.title}</DetailsTitle>
-        <Author>{data.activeLoan.item.author || data.activeLoan.item.publisher}</Author>
-        <Description dangerouslySetInnerHTML={{ __html: data.activeLoan.item.description }}></Description>
+        </LibraryItemDetailsLeftContent>
+      </LibraryItemDetailsLeft>
+      <LibraryItemDetailsRight>
+        <LibraryItemDetailsTitle>{data.activeLoan.item.title}</LibraryItemDetailsTitle>
+        <LibraryItemDetailsSubtitle>
+          {data.activeLoan.item.author || data.activeLoan.item.publisher}
+        </LibraryItemDetailsSubtitle>
+        <LibraryItemDetailsDescription
+          dangerouslySetInnerHTML={{ __html: data.activeLoan.item.description }}
+        ></LibraryItemDetailsDescription>
 
         <UserLoanHistory>User loan history:</UserLoanHistory>
         {data.activeLoan.userLoanHistory.map((userLoanHistory: any) => (
@@ -126,7 +129,7 @@ export function ActiveLoanDetails({ loanId, onLoanStateChanged = () => {} }: Act
             </LoanItemDate>
           </LoanItem>
         ))}
-      </Right>
-    </BookDetailsWrapper>
+      </LibraryItemDetailsRight>
+    </LibraryItemDetails>
   );
 }

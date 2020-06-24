@@ -3,24 +3,20 @@ import { gql } from 'apollo-boost';
 import React, { useState } from 'react';
 import { Button } from 'shared/components/Button';
 import { EmptyState } from 'shared/components/EmptyState';
+import {
+  LibraryItemDetails,
+  LibraryItemDetailsDescription,
+  LibraryItemDetailsImage,
+  LibraryItemDetailsLeft,
+  LibraryItemDetailsLeftContent,
+  LibraryItemDetailsRight,
+  LibraryItemDetailsSubtitle,
+  LibraryItemDetailsTitle,
+} from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { Modal } from 'shared/components/Modal';
 import { dateFormatter } from 'shared/helpers';
-import {
-  Author,
-  BookDetailsWrapper,
-  Description,
-  DetailsTitle,
-  Image,
-  Left,
-  LeftContent,
-  LoanItem,
-  LoanItemDate,
-  LoanItemTitle,
-  Right,
-  StyledButton,
-  UserLoanHistory,
-} from '../common';
+import { LoanItem, LoanItemDate, LoanItemTitle, StyledButton, UserLoanHistory } from '../common';
 import { ButtonBar, RejectLoanDialog, RejectLoanDialogTitle, StyledInput } from './styled';
 
 const GET_PENDING_LOAN_DETAILS = gql`
@@ -130,10 +126,13 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
   }
 
   return (
-    <BookDetailsWrapper>
-      <Left>
-        <LeftContent>
-          <Image src={data.pendingLoan.item.thumbnail} alt={`Cover for ${data.pendingLoan.item.title}`} />
+    <LibraryItemDetails>
+      <LibraryItemDetailsLeft>
+        <LibraryItemDetailsLeftContent>
+          <LibraryItemDetailsImage
+            src={data.pendingLoan.item.thumbnail}
+            alt={`Cover for ${data.pendingLoan.item.title}`}
+          />
           <StyledButton block color="success" onClick={onApproveLoanClick}>
             Approve
           </StyledButton>
@@ -158,12 +157,14 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
               </RejectLoanDialog>
             )}
           />
-        </LeftContent>
-      </Left>
-      <Right>
-        <DetailsTitle>{data.pendingLoan.item.title}</DetailsTitle>
-        <Author>{data.pendingLoan.item.author || data.pendingLoan.item.publisher}</Author>
-        <Description dangerouslySetInnerHTML={{ __html: data.pendingLoan.item.description }}></Description>
+        </LibraryItemDetailsLeftContent>
+      </LibraryItemDetailsLeft>
+      <LibraryItemDetailsRight>
+        <LibraryItemDetailsTitle>{data.pendingLoan.item.title}</LibraryItemDetailsTitle>
+        <LibraryItemDetailsSubtitle>
+          {data.pendingLoan.item.author || data.pendingLoan.item.publisher}
+        </LibraryItemDetailsSubtitle>
+        <LibraryItemDetailsDescription dangerouslySetInnerHTML={{ __html: data.pendingLoan.item.description }} />
 
         <UserLoanHistory>User loan history:</UserLoanHistory>
         {data.pendingLoan.userLoanHistory.map((userLoanHistory: any) => (
@@ -175,7 +176,7 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
             </LoanItemDate>
           </LoanItem>
         ))}
-      </Right>
-    </BookDetailsWrapper>
+      </LibraryItemDetailsRight>
+    </LibraryItemDetails>
   );
 }
