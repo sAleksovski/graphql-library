@@ -22,6 +22,7 @@ export function Header() {
       </Left>
 
       <Right>
+        {auth.isAdmin() && <Link to="/admin">Admin</Link>}
         <Link to="/loans">
           Loans <Badge>3</Badge>
         </Link>

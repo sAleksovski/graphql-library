@@ -2,22 +2,21 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { EmptyState } from 'shared/components/EmptyState';
+import {
+  LibraryList,
+  LibraryListItem,
+  LibraryListItemContent,
+  LibraryListItemExternalInfoLink,
+  LibraryListItemImage,
+  LibraryListItemLeft,
+  LibraryListItemSubtitle,
+  LibraryListItemTitle,
+} from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { Rating } from 'shared/components/Rating';
 import { dateFormatter } from 'shared/helpers';
 import { Book, BookCategory } from './book.type';
-import {
-  Author,
-  BookListInfo,
-  BookListItem,
-  BookListWrapper,
-  Category,
-  CategoryList,
-  ExternalInfoLink,
-  Image,
-  PublisherInfo,
-  Title,
-} from './styled';
+import { Category, CategoryList } from './styled';
 
 const GET_BOOKS = gql`
   query Books {
@@ -61,51 +60,53 @@ export function BookList({ onSelectBook = () => {} }: BookListProps) {
   }
 
   return (
-    <BookListWrapper>
+    <LibraryList>
       {data.books.map(
         (
           { id, title, author, averageRating, thumbnail, publisher, publishedDate, categories, isbn10, infoLink }: Book,
           index: number,
         ) => (
-          <BookListItem
+          <LibraryListItem
             first={index === 0}
             last={index === data.books.length - 1}
             key={id}
             onClick={() => onSelectBook(id)}
           >
-            <Image src={thumbnail} />
-            <BookListInfo>
-              <Title>{title}</Title>
-              <Author>{author}</Author>
-              <PublisherInfo>
+            <LibraryListItemLeft>
+              <LibraryListItemImage src={thumbnail} />
+            </LibraryListItemLeft>
+            <LibraryListItemContent>
+              <LibraryListItemTitle>{title}</LibraryListItemTitle>
+              <LibraryListItemSubtitle>{author}</LibraryListItemSubtitle>
+              <LibraryListItemSubtitle>
                 {publisher} • {dateFormatter.format(new Date(publishedDate))}
-              </PublisherInfo>
+              </LibraryListItemSubtitle>
               <CategoryList>
                 {categories.map((c: BookCategory) => (
                   <Category key={c.name}>{c.name}</Category>
                 ))}
               </CategoryList>
-              <ExternalInfoLink
+              <LibraryListItemExternalInfoLink
                 onClick={(event) => event.stopPropagation()}
                 href={`https://www.goodreads.com/search?q=${isbn10}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Goodreads
-              </ExternalInfoLink>
-              <ExternalInfoLink
+              </LibraryListItemExternalInfoLink>
+              <LibraryListItemExternalInfoLink
                 onClick={(event) => event.stopPropagation()}
                 href={infoLink}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Google Books
-              </ExternalInfoLink>
-            </BookListInfo>
+              </LibraryListItemExternalInfoLink>
+            </LibraryListItemContent>
             <Rating rating={averageRating} />
-          </BookListItem>
+          </LibraryListItem>
         ),
       )}
-    </BookListWrapper>
+    </LibraryList>
   );
 }

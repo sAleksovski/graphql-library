@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useOnEscapeKeyDown } from 'shared/hooks/onEscapeKeyDown';
 import { useOnOutsideClick } from 'shared/hooks/onOutsideClick';
 import { DropdownCircleMain, DropdownWrapper } from './styled';
-export * from './styled';
+export { DropdownContent, DropdownItem } from './styled';
 
 interface DropdownProps {
   children: [any, any];

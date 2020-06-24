@@ -4,14 +4,14 @@ import { useOnEscapeKeyDown } from 'shared/hooks/onEscapeKeyDown';
 import { useOnOutsideClick } from 'shared/hooks/onOutsideClick';
 import { ClickableOverlay, ScrollOverlay, StyledCloseIcon, StyledModal } from './styled';
 
-export interface ModalRenderLinkProps {
+interface ModalRenderLinkProps {
   open: () => void;
 }
-export interface ModalRenderContentProps {
+interface ModalRenderContentProps {
   close: () => void;
 }
 
-export interface ModalProps {
+interface ModalProps {
   width: number;
   withCloseIcon: boolean;
   isOpen?: boolean;

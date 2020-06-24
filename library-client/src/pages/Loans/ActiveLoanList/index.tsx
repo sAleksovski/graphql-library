@@ -4,10 +4,17 @@ import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { Avatar } from 'shared/components/Avatar';
 import { EmptyState } from 'shared/components/EmptyState';
-import { BoardGameIcon, BookIcon } from 'shared/components/Icon';
+import {
+  LibraryList,
+  LibraryListItem,
+  LibraryListItemContent,
+  LibraryListItemIcon,
+  LibraryListItemLeft,
+  LibraryListItemSubtitle,
+  LibraryListItemTitle,
+} from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
-import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
 
 const GET_ACTIVE_LOANS = gql`
   query ActiveLoans {
@@ -65,23 +72,25 @@ export function ActiveLoanList({ onSelectLoan = () => {} }: ActiveLoanListProps)
   }
 
   return (
-    <LoanListWrapper>
+    <LibraryList>
       {data.activeLoans.map((item: any, index: number) => (
-        <LoanListItem
+        <LibraryListItem
+          centerItems
           first={index === 0}
           last={index === data.activeLoans.length - 1}
           key={item.id}
           onClick={() => onSelectLoan(item.id)}
         >
-          <Avatar avatarUrl={item.user.avatarUrl} name={item.user.name} />
-          <LoanInfo>
-            <Title>{item.item.title}</Title>
-            <LoanDate>{dateFormatter.format(new Date(item.loanedAt))}</LoanDate>
-          </LoanInfo>
-          {item.item.type === 'BOOK' && <BookIcon size={24} />}
-          {item.item.type === 'BOARD_GAME' && <BoardGameIcon size={24} />}
-        </LoanListItem>
+          <LibraryListItemLeft>
+            <Avatar avatarUrl={item.user.avatarUrl} name={item.user.name} />
+          </LibraryListItemLeft>
+          <LibraryListItemContent>
+            <LibraryListItemTitle>{item.item.title}</LibraryListItemTitle>
+            <LibraryListItemSubtitle noMargin>{dateFormatter.format(new Date(item.loanedAt))}</LibraryListItemSubtitle>
+          </LibraryListItemContent>
+          <LibraryListItemIcon type={item.item.type} />
+        </LibraryListItem>
       ))}
-    </LoanListWrapper>
+    </LibraryList>
   );
 }

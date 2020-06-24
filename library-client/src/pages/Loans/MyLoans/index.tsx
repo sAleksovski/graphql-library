@@ -2,10 +2,17 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { EmptyState } from 'shared/components/EmptyState';
-import { BoardGameIcon, BookIcon } from 'shared/components/Icon';
+import {
+  LibraryList,
+  LibraryListItem,
+  LibraryListItemContent,
+  LibraryListItemIcon,
+  LibraryListItemLeft,
+  LibraryListItemSubtitle,
+  LibraryListItemTitle,
+} from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { dateFormatter } from 'shared/helpers';
-import { LoanDate, LoanInfo, LoanListItem, LoanListWrapper, Title } from '../common';
 import { LoanStatusIcon, RejectReason } from './styled';
 
 const GET_MY_LOANS = gql`
@@ -58,33 +65,40 @@ export function MyLoans() {
   }
 
   return (
-    <LoanListWrapper>
+    <LibraryList>
       {data.myLoans.map((item: any, index: number) => (
-        <LoanListItem first={index === 0} last={index === data.myLoans.length - 1} key={item.id}>
-          {item.item.type === 'BOOK' && <BookIcon size={24} />}
-          {item.item.type === 'BOARD_GAME' && <BoardGameIcon size={24} />}
-          <LoanInfo>
-            <Title>{item.item.title}</Title>
+        <LibraryListItem first={index === 0} last={index === data.myLoans.length - 1} key={item.id} centerItems>
+          <LibraryListItemLeft>
+            <LibraryListItemIcon type={item.item.type} />
+          </LibraryListItemLeft>
+          <LibraryListItemContent>
+            <LibraryListItemTitle>{item.item.title}</LibraryListItemTitle>
             {item.status === 'LOAN_REQUESTED' && (
-              <LoanDate>Requested {dateFormatter.format(new Date(item.loanRequested))}</LoanDate>
+              <LibraryListItemSubtitle noMargin>
+                Requested {dateFormatter.format(new Date(item.loanRequested))}
+              </LibraryListItemSubtitle>
             )}
-            {item.status === 'LOAN_APPROVED' && <LoanDate>{dateFormatter.format(new Date(item.loanDecided))}</LoanDate>}
+            {item.status === 'LOAN_APPROVED' && (
+              <LibraryListItemSubtitle noMargin>
+                {dateFormatter.format(new Date(item.loanDecided))}
+              </LibraryListItemSubtitle>
+            )}
             {item.status === 'LOAN_REJECTED' && (
               <>
-                <LoanDate>{dateFormatter.format(new Date(item.loanDecided))}</LoanDate>
+                <LibraryListItemSubtitle>{dateFormatter.format(new Date(item.loanDecided))}</LibraryListItemSubtitle>
                 <RejectReason>{item.reason}</RejectReason>
               </>
             )}
             {item.status === 'LOAN_FINISHED' && (
-              <LoanDate>
+              <LibraryListItemSubtitle noMargin>
                 {dateFormatter.format(new Date(item.loanRequested))} →{' '}
                 {dateFormatter.format(new Date(item.loanFinished))}
-              </LoanDate>
+              </LibraryListItemSubtitle>
             )}
-          </LoanInfo>
+          </LibraryListItemContent>
           <LoanStatusIcon status={item.status} />
-        </LoanListItem>
+        </LibraryListItem>
       ))}
-    </LoanListWrapper>
+    </LibraryList>
   );
 }

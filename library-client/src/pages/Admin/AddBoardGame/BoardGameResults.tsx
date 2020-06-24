@@ -17,12 +17,10 @@ import {
 } from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { Rating } from 'shared/components/Rating';
-import { dateFormatter } from 'shared/helpers';
-import { BoardGame } from './board-game.type';
 
-const GET_BOARD_GAMES = gql`
-  query BoardGames {
-    boardGames {
+const SEARCH_BOARD_GAMES = gql`
+  query BoardGamesFromBordGameAtlas($title: String!) {
+    findBoardGameFromBoardGameAtlas(title: $title) {
       id
       title
       averageRating
@@ -40,31 +38,36 @@ const GET_BOARD_GAMES = gql`
   }
 `;
 
-interface BoardGameListProps {
-  onSelectBoardGame: (boardGameId: number) => void;
+interface BoardGameResultsProps {
+  search: string;
+  onSelectBoardGame: (boardGameId: string) => void;
 }
 
-export function BoardGameList({ onSelectBoardGame }: BoardGameListProps) {
-  const { loading, error, data } = useQuery(GET_BOARD_GAMES);
+export function BoardGameResults({ search, onSelectBoardGame }: BoardGameResultsProps) {
+  const { loading, error, data } = useQuery(SEARCH_BOARD_GAMES, {
+    variables: {
+      title: search,
+    },
+  });
 
   if (loading) return <Loading />;
   if (error) {
     return (
       <EmptyState
-        title="Failed to load board games"
+        title="Failed to load board gfames"
         message="Some error occured while loading the board games. Please try again."
         icon="board-game"
       />
     );
   }
 
-  if (data.boardGames.length === 0) {
+  if (data.findBoardGameFromBoardGameAtlas.length === 0) {
     return <EmptyState title="No board games" message="No board games found in the library" icon="board-game" />;
   }
 
   return (
     <LibraryList>
-      {data.boardGames.map(
+      {data.findBoardGameFromBoardGameAtlas.map(
         (
           {
             id,
@@ -80,12 +83,12 @@ export function BoardGameList({ onSelectBoardGame }: BoardGameListProps) {
             maxPlayTime,
             minPlayers,
             maxPlayers,
-          }: BoardGame,
+          }: any,
           index: number,
         ) => (
           <LibraryListItem
             first={index === 0}
-            last={index === data.boardGames.length - 1}
+            last={index === data.findBoardGameFromBoardGameAtlas.length - 1}
             key={id}
             onClick={() => onSelectBoardGame(id)}
           >
@@ -95,20 +98,24 @@ export function BoardGameList({ onSelectBoardGame }: BoardGameListProps) {
             <LibraryListItemContent>
               <LibraryListItemTitle>{title}</LibraryListItemTitle>
               <LibraryListItemSubtitle>
-                {publisher} • {dateFormatter.format(new Date(publishedDate))}
+                {publisher} {publisher && publishedDate !== 'null' && '•'} {publishedDate !== 'null' && publishedDate}
               </LibraryListItemSubtitle>
-              <LibraryListItemIconSubtitle>
-                <LibraryListItemIconWrapper>
-                  <PlayingTimeIcon size={20} />
-                </LibraryListItemIconWrapper>
-                {minPlayTime}min → {maxPlayTime}min
-              </LibraryListItemIconSubtitle>
-              <LibraryListItemIconSubtitle>
-                <LibraryListItemIconWrapper>
-                  <PlayersIcon size={20} />
-                </LibraryListItemIconWrapper>
-                {minPlayers} → {maxPlayers} players
-              </LibraryListItemIconSubtitle>
+              {minPlayTime && maxPlayTime && (
+                <LibraryListItemIconSubtitle>
+                  <LibraryListItemIconWrapper>
+                    <PlayingTimeIcon size={20} />
+                  </LibraryListItemIconWrapper>
+                  {minPlayTime}min → {maxPlayTime}min
+                </LibraryListItemIconSubtitle>
+              )}
+              {minPlayers && maxPlayers && (
+                <LibraryListItemIconSubtitle>
+                  <LibraryListItemIconWrapper>
+                    <PlayersIcon size={20} />
+                  </LibraryListItemIconWrapper>
+                  {minPlayers} → {maxPlayers} players
+                </LibraryListItemIconSubtitle>
+              )}
               <LibraryListItemExternalInfoLink
                 onClick={(event) => event.stopPropagation()}
                 href={boardGameAtlasUrl}

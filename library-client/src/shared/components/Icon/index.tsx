@@ -3,6 +3,7 @@ export {
   IoMdCheckmarkCircleOutline as ApprovedIcon,
   IoMdClipboard as LoanIcon,
   IoMdClose as CloseIcon,
+  IoMdCloseCircleOutline as ClearSearchIcon,
   IoMdCloseCircleOutline as RejectedIcon,
   IoMdLock as FinishedIcon,
   IoMdMap as BoardGameIcon,
