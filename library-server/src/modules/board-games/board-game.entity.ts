@@ -19,6 +19,9 @@ export class BoardGame extends LibraryItem {
   maxPlayTime: number;
 
   @Column()
+  boardGameAtlasId: string;
+
+  @Column()
   boardGameAtlasUrl: string;
 
   @Column()

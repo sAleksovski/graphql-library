@@ -1,11 +1,13 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { Button } from 'shared/components/Button';
 import { EmptyState } from 'shared/components/EmptyState';
 import { PlayersIcon, PlayingTimeIcon } from 'shared/components/Icon';
 import {
   LibraryList,
   LibraryListItem,
+  LibraryListItemActions,
   LibraryListItemContent,
   LibraryListItemExternalInfoLink,
   LibraryListItemIconSubtitle,
@@ -34,6 +36,16 @@ const SEARCH_BOARD_GAMES = gql`
       maxPlayTime
       minPlayers
       maxPlayers
+      alreadyAdded
+    }
+  }
+`;
+
+const ADD_BOARD_GAME_TO_LIBRARY = gql`
+  mutation createBoardGameByBoardGameAtlasId($id: String!) {
+    createBoardGameByBoardGameAtlasId(boardGameAtlasId: $id) {
+      id
+      title
     }
   }
 `;
@@ -44,11 +56,23 @@ interface BoardGameResultsProps {
 }
 
 export function BoardGameResults({ search, onSelectBoardGame }: BoardGameResultsProps) {
-  const { loading, error, data } = useQuery(SEARCH_BOARD_GAMES, {
+  const { loading, error, data, refetch } = useQuery(SEARCH_BOARD_GAMES, {
     variables: {
       title: search,
     },
   });
+
+  const [addBoardGame] = useMutation(ADD_BOARD_GAME_TO_LIBRARY, {
+    onCompleted: () => refetch(),
+  });
+
+  function addBoardGameClicked(id: string) {
+    addBoardGame({
+      variables: {
+        id,
+      },
+    });
+  }
 
   if (loading) return <Loading />;
   if (error) {
@@ -83,6 +107,7 @@ export function BoardGameResults({ search, onSelectBoardGame }: BoardGameResults
             maxPlayTime,
             minPlayers,
             maxPlayers,
+            alreadyAdded,
           }: any,
           index: number,
         ) => (
@@ -141,7 +166,12 @@ export function BoardGameResults({ search, onSelectBoardGame }: BoardGameResults
                 Rules
               </LibraryListItemExternalInfoLink>
             </LibraryListItemContent>
-            <Rating rating={averageRating} />
+            <LibraryListItemActions>
+              <Rating rating={averageRating} />
+              <Button disabled={alreadyAdded} onClick={() => addBoardGameClicked(id)}>
+                {alreadyAdded ? 'Already added' : 'Add to library'}
+              </Button>
+            </LibraryListItemActions>
           </LibraryListItem>
         ),
       )}

@@ -15,6 +15,7 @@ export interface ResolvedBoardGameData {
   boardGameAtlasUrl: string;
   officialUrl: string;
   rulesUrl: string;
+  alreadyAdded?: boolean;
 }
 
 export interface BoardGameAtlasGame {

@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server';
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, In, Repository } from 'typeorm';
 import { ResolvedBoardGameData } from './board-game-data-resolver/board-game-atlas.types';
 import { BoardGame } from './board-game.entity';
 
@@ -11,6 +11,10 @@ export class BoardGameRepository extends Repository<BoardGame> {
       throw new ApolloError(`Board game with id "${id}" does not exist`, 'NOT_FOUND');
     }
     return boardGame;
+  }
+
+  async findByBoardGameAtlasIds(ids: string[]): Promise<BoardGame[]> {
+    return this.find({ boardGameAtlasId: In(ids) });
   }
 
   async createBoardGame(resolvedBoardGameData: ResolvedBoardGameData): Promise<BoardGame> {
@@ -28,6 +32,7 @@ export class BoardGameRepository extends Repository<BoardGame> {
     boardGame.maxPlayers = resolvedBoardGameData.maxPlayers;
     boardGame.minPlayTime = resolvedBoardGameData.minPlayTime;
     boardGame.maxPlayTime = resolvedBoardGameData.maxPlayTime;
+    boardGame.boardGameAtlasId = resolvedBoardGameData.id;
     boardGame.boardGameAtlasUrl = resolvedBoardGameData.boardGameAtlasUrl;
     boardGame.officialUrl = resolvedBoardGameData.officialUrl;
     boardGame.rulesUrl = resolvedBoardGameData.rulesUrl;

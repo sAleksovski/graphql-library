@@ -60,7 +60,7 @@ export const LibraryListItemContent = styled.div`
 `;
 
 export const LibraryListItemTitle = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #495057;
 `;
@@ -113,6 +113,13 @@ export const LibraryListItemExternalInfoLink = styled.a`
   margin-right: 0.5rem;
   text-decoration: none;
   color: #0079c9;
+`;
+
+export const LibraryListItemActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
 `;
 
 export const LibraryItemDetails = styled.div`

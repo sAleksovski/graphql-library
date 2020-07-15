@@ -38,15 +38,20 @@ export const SearchInput = styled.input<SearchInputProps>`
   background-clip: padding-box;
   border: 1px solid #c5c5c5;
   border-left: 0;
-  border-right: 0;
   background-color: #fff;
   flex-grow: 1;
 
   ${({ value }) =>
+    value &&
+    `
+    border-right: 0;
+  `}
+
+  ${({ value }) =>
     !value &&
     `
-  border-top-right-radius: 20rem;
-  border-bottom-right-radius: 20rem;
+    border-top-right-radius: 20rem;
+    border-bottom-right-radius: 20rem;
   `}
 `;
 

@@ -41,6 +41,7 @@ export const typeDefs: DocumentNode = gql`
     boardGameAtlasUrl: String
     officialUrl: String
     rulesUrl: String
+    alreadyAdded: Boolean
   }
 
   extend type Query {

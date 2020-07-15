@@ -42,7 +42,16 @@ class BoardGameService {
   ): Promise<ResolvedBoardGameData[]> {
     assertIsAdmin(ctx);
 
-    return findBoardGamesByTitle(title);
+    const boardGames = await findBoardGamesByTitle(title);
+
+    const boardGameAtlasIds = boardGames.map((b: ResolvedBoardGameData) => b.id);
+
+    const alreadyInDb = await this.boardGameRepository.findByBoardGameAtlasIds(boardGameAtlasIds);
+
+    return boardGames.map((b: ResolvedBoardGameData) => ({
+      ...b,
+      alreadyAdded: !!alreadyInDb.find((t) => t.boardGameAtlasId === b.id),
+    }));
   }
 
   private async saveBoardGame(boardGameData: ResolvedBoardGameData): Promise<BoardGame> {
