@@ -16,7 +16,7 @@ import {
 } from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { Modal } from 'shared/components/Modal';
-import { dateFormatter } from 'shared/helpers';
+import { dateFormatter } from 'shared/utils';
 import { LoanItem, LoanItemDate, LoanItemTitle, StyledButton, UserLoanHistory } from '../common';
 import { ButtonBar, RejectLoanDialog, RejectLoanDialogTitle, StyledInput } from './styled';
 

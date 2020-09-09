@@ -12,7 +12,7 @@ import {
   LibraryListItemTitle,
 } from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
-import { dateFormatter } from 'shared/helpers';
+import { dateFormatter } from 'shared/utils';
 import { LoanStatusIcon, RejectReason } from './styled';
 
 const GET_MY_LOANS = gql`

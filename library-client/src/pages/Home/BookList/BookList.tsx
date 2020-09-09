@@ -14,7 +14,7 @@ import {
 } from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
 import { Rating } from 'shared/components/Rating';
-import { dateFormatter } from 'shared/helpers';
+import { dateFormatter } from 'shared/utils';
 import { Book, BookCategory } from './book.type';
 import { Category, CategoryList } from './styled';
 

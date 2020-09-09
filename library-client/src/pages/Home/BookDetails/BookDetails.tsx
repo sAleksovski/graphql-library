@@ -22,7 +22,7 @@ import {
   LibraryItemDetailsTitle,
 } from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
-import { dateTimeFormatter } from 'shared/utils/date-time.formatter';
+import { dateTimeFormatter } from 'shared/utils';
 import { AddComment } from '../common/AddComment';
 import { LoanButton } from '../common/LoanButton';
 

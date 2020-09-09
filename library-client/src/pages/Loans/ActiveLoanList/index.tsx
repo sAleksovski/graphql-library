@@ -14,7 +14,7 @@ import {
   LibraryListItemTitle,
 } from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
-import { dateFormatter } from 'shared/helpers';
+import { dateFormatter } from 'shared/utils';
 
 const GET_ACTIVE_LOANS = gql`
   query ActiveLoans {

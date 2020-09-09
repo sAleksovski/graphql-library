@@ -13,7 +13,7 @@ import {
   LibraryItemDetailsTitle,
 } from 'shared/components/Library';
 import { Loading } from 'shared/components/Loading';
-import { dateFormatter } from 'shared/helpers';
+import { dateFormatter } from 'shared/utils';
 import { LoanItem, LoanItemDate, LoanItemTitle, StyledButton, UserLoanHistory } from '../common';
 
 const GET_ACTIVE_LOAN_DETAILS = gql`
