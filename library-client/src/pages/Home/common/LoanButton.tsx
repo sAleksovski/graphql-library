@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/react-hooks';
 import { DocumentNode, gql } from 'apollo-boost';
+import { refreshPendingLoansCount } from 'pages/common/Header';
 import React from 'react';
 import { Button } from 'shared/components/Button';
 
@@ -46,6 +47,7 @@ export function LoanButton({
           },
         },
       });
+      refreshPendingLoansCount();
     },
   });
 

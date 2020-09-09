@@ -15,6 +15,7 @@ import { ActiveLoan, ActiveLoanInfo, MyLoan, PendingLoan, PendingLoanInfo } from
 
 export const resolvers: IResolvers = {
   Query: {
+    pendingLoansCount: (_, __, ctx: AuthenticatedUserContext): Promise<number> => loanService.getPendingLoansCount(ctx),
     pendingLoans: (_, __, ctx: AuthenticatedUserContext): Promise<PendingLoan[]> => loanService.getPendingLoans(ctx),
     pendingLoan: (_, pendingLoanInput: PendingLoanInput, ctx: AuthenticatedUserContext): Promise<PendingLoanInfo> =>
       loanService.getPendingLoan(ctx, pendingLoanInput.loanId),

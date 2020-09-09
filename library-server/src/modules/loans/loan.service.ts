@@ -104,6 +104,12 @@ class LoanService {
     };
   }
 
+  async getPendingLoansCount(ctx: AuthenticatedUserContext): Promise<number> {
+    const pendingLoans = await this.getPendingLoans(ctx);
+
+    return pendingLoans.length;
+  }
+
   async getPendingLoans(ctx: AuthenticatedUserContext): Promise<PendingLoan[]> {
     assertIsAdmin(ctx);
 

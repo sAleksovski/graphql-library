@@ -65,6 +65,7 @@ export const typeDefs: DocumentNode = gql`
   }
 
   extend type Query {
+    pendingLoansCount: Int
     pendingLoans: [PendingLoan]
     pendingLoan(loanId: Int!): PendingLoanInfo
     activeLoans: [ActiveLoan]

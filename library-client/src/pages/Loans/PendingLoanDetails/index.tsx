@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { refreshPendingLoansCount } from 'pages/common/Header';
 import React, { useState } from 'react';
 import { Button } from 'shared/components/Button';
 import { EmptyState } from 'shared/components/EmptyState';
@@ -84,6 +85,7 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
     onCompleted({ approveLoan }) {
       if (approveLoan) {
         onLoanStateChanged();
+        refreshPendingLoansCount();
       }
     },
   });
@@ -92,6 +94,7 @@ export function PendingLoanDetails({ loanId, onLoanStateChanged = () => {} }: Pe
     onCompleted({ rejectLoan }) {
       if (rejectLoan) {
         onLoanStateChanged();
+        refreshPendingLoansCount();
       }
     },
   });
