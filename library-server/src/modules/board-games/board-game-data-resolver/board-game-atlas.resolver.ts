@@ -36,23 +36,23 @@ export const resolveBoardGameDetails = async (id: string): Promise<ResolvedBoard
     const {
       games: [game],
     }: BoardGameAtlasData = await fetch(
-      `https://www.boardgameatlas.com/api/search?client_id=${BOARD_GAME_ATLAS_CLIENT_ID}&ids=${id}`,
+      `https://api.boardgameatlas.com/api/search?client_id=${BOARD_GAME_ATLAS_CLIENT_ID}&ids=${id}`,
     ).then((result) => result.json());
 
     return convertBoardGame(game);
   } catch {
-    throw new ApolloError(`Board game with isbn "${id}" does not exist`, 'NOT_FOUND');
+    throw new ApolloError(`Board game with "${id}" does not exist`, 'NOT_FOUND');
   }
 };
 
 export const findBoardGamesByTitle = async (title: string): Promise<ResolvedBoardGameData[]> => {
   try {
     const { games }: BoardGameAtlasData = await fetch(
-      `https://www.boardgameatlas.com/api/search?client_id=${BOARD_GAME_ATLAS_CLIENT_ID}&name=${title}`,
+      `https://api.boardgameatlas.com/api/search?client_id=${BOARD_GAME_ATLAS_CLIENT_ID}&name=${title}`,
     ).then((result) => result.json());
 
     return games.map(convertBoardGame);
   } catch {
-    throw new ApolloError(`Board game with isbn "${title}" does not exist`, 'NOT_FOUND');
+    throw new ApolloError(`Board game with title "${title}" does not exist`, 'NOT_FOUND');
   }
 };

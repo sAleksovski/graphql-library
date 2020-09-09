@@ -126,7 +126,7 @@ class LoanService {
       user: event.user,
     }));
 
-    return pendingLoans;
+    return this.sortDescending(pendingLoans, 'requestedAt');
   }
 
   async getPendingLoan(ctx: AuthenticatedUserContext, loanId: number): Promise<PendingLoanInfo> {
@@ -183,7 +183,7 @@ class LoanService {
       user: event.user,
     }));
 
-    return activeLoans;
+    return this.sortDescending(activeLoans, 'loanedAt');
   }
 
   async getActiveLoan(ctx: AuthenticatedUserContext, loanId: number): Promise<ActiveLoanInfo> {
@@ -228,7 +228,9 @@ class LoanService {
       .leftJoinAndSelect('loanEvent.user', 'user')
       .getMany();
 
-    return this.generateMyLoanHistory(loanEventsPerUser);
+    const myLoanHistory = this.generateMyLoanHistory(loanEventsPerUser);
+
+    return this.sortDescending(myLoanHistory, 'loanRequested');
   }
 
   private async verifyCanApproveOrReject(loanEventId: number): Promise<LoanEvent> {
@@ -303,12 +305,6 @@ class LoanService {
               loanedToUser: item.user.id === userId,
             };
           case LoanEventType.LOAN_REJECTED:
-            return {
-              ...memo,
-              canLoan: true,
-              hasPendingLoan: false,
-              loanedToUser: false,
-            };
           case LoanEventType.LOAN_FINISHED:
             return {
               ...memo,
@@ -334,7 +330,7 @@ class LoanService {
     );
     const history: LoanHistoryWithItem[] = [];
 
-    const eventsPerItem: { [key: string]: LoanEvent[] } = meaningfulEvents.reduce(
+    const eventsPerItemMap: { [key: string]: LoanEvent[] } = meaningfulEvents.reduce(
       (memo: { [key: string]: LoanEvent[] }, event: LoanEvent) => ({
         ...memo,
         [event.item.id]: [...(memo[event.item.id] || []), event],
@@ -342,10 +338,10 @@ class LoanService {
       {},
     );
 
-    Object.values(eventsPerItem).forEach((events: LoanEvent[]) => {
+    Object.values(eventsPerItemMap).forEach((eventsPerItem: LoanEvent[]) => {
       let newHistoryItem: Partial<LoanHistoryWithItem> = {};
 
-      for (const event of events) {
+      for (const event of eventsPerItem) {
         if (event.type === LoanEventType.LOAN_APPROVED) {
           newHistoryItem.user = event.user;
           newHistoryItem.loanStart = event.createdAt;
@@ -369,7 +365,7 @@ class LoanService {
   private generateMyLoanHistory(events: LoanEvent[]): MyLoan[] {
     const history: MyLoan[] = [];
 
-    const eventsPerItem: { [key: string]: LoanEvent[] } = events.reduce(
+    const eventsPerItemMap: { [key: string]: LoanEvent[] } = events.reduce(
       (memo: { [key: string]: LoanEvent[] }, event: LoanEvent) => ({
         ...memo,
         [event.item.id]: [...(memo[event.item.id] || []), event],
@@ -377,10 +373,10 @@ class LoanService {
       {},
     );
 
-    Object.values(eventsPerItem).forEach((events: LoanEvent[]) => {
+    Object.values(eventsPerItemMap).forEach((eventsPerItem: LoanEvent[]) => {
       let newHistoryItem: Partial<MyLoan> = {};
 
-      for (const event of events) {
+      for (const event of eventsPerItem) {
         newHistoryItem.status = event.type;
         newHistoryItem.item = event.item;
         newHistoryItem.id = event.id;
@@ -424,6 +420,10 @@ class LoanService {
     const user = new User();
     user.id = userId;
     return user;
+  }
+
+  private sortDescending<T extends Record<K, Date>, K extends string>(items: T[], key: K): T[] {
+    return items.sort((a, b) => b[key].getTime() - a[key].getTime());
   }
 }
 

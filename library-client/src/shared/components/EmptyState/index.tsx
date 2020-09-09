@@ -3,7 +3,7 @@ import { BoardGameIcon, BookIcon, LoanIcon, SearchIcon, UnknownErrorIcon } from 
 import { EmptyStateContainer, IconContainer, Message, Title } from './styled';
 
 interface EmptyStateProps {
-  icon: 'book' | 'board-game' | 'search' | 'loan';
+  icon: 'book' | 'board-game' | 'search' | 'loan' | 'error';
   title: string;
   message: string;
 }
@@ -13,6 +13,7 @@ const IconMap = {
   'board-game': () => <BoardGameIcon size={48} />,
   search: () => <SearchIcon size={48} />,
   loan: () => <LoanIcon size={48} />,
+  error: () => <UnknownErrorIcon size={48} />,
   default: () => <UnknownErrorIcon size={48} />,
 };
 
