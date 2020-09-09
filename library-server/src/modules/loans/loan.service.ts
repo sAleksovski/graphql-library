@@ -14,7 +14,7 @@ import {
   LoanInfo,
   MyLoan,
   PendingLoan,
-  PendingLoanInfo,
+  PendingLoanInfo
 } from './loan.types';
 
 type LoanInfoWithoutHistory = Omit<LoanInfo, 'loanHistory'>;
@@ -163,7 +163,7 @@ class LoanService {
       item: loanForEvent.item,
       requestedAt: loanForEvent.createdAt,
       user: loanForEvent.user,
-      userLoanHistory,
+      userLoanHistory: this.sortDescending(userLoanHistory, 'loanStart'),
     };
   }
 
@@ -220,7 +220,7 @@ class LoanService {
       item: loanForEvent.item,
       loanedAt: loanForEvent.createdAt,
       user: loanForEvent.user,
-      userLoanHistory,
+      userLoanHistory: this.sortDescending(userLoanHistory, 'loanStart'),
     };
   }
 
