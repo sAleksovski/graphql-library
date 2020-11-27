@@ -14,7 +14,7 @@ import {
   LoanInfo,
   MyLoan,
   PendingLoan,
-  PendingLoanInfo
+  PendingLoanInfo,
 } from './loan.types';
 
 type LoanInfoWithoutHistory = Omit<LoanInfo, 'loanHistory'>;

@@ -30,7 +30,7 @@ export interface BoardGameAtlasGame {
   image_url: string;
   thumb_url: string;
   url: string;
-  primary_publisher: string;
+  primary_publisher: { name: string };
   num_user_ratings: number;
   average_user_rating: number;
   official_url: string;

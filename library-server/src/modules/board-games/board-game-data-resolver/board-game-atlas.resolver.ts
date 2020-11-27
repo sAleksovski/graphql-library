@@ -18,7 +18,7 @@ const convertBoardGame = (boardGameAtlasGame: BoardGameAtlasGame): ResolvedBoard
   description: formatDescription(boardGameAtlasGame.description),
   smallThumbnail: boardGameAtlasGame.thumb_url,
   thumbnail: boardGameAtlasGame.image_url,
-  publisher: boardGameAtlasGame.primary_publisher,
+  publisher: boardGameAtlasGame.primary_publisher?.name ?? '',
   publishedDate: `${boardGameAtlasGame.year_published}`,
   averageRating: parseFloat(boardGameAtlasGame.average_user_rating.toFixed(2)),
   ratingsCount: boardGameAtlasGame.num_user_ratings,
