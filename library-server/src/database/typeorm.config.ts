@@ -6,4 +6,10 @@ export const typeOrmConfig: ConnectionOptions = {
   url: DATABASE_URL,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   synchronize: true,
+  ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 };
